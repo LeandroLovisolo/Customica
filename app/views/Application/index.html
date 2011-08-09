@@ -1,0 +1,90 @@
+#{extends 'main.html' /}
+
+<div class="index-page">
+	<div class="sixteen columns">
+		<h2 class="row" style="text-align: center; background-color: #ffa">
+			Custómica es el sitio donde podés
+			<a href="@{Application.designer}">diseñar tu propia remera</a>
+			y comprar remeras diseñadas por gente como vos.
+		</h2>
+	</div>
+	
+	<div class="twelve columns">
+		<h3 class="row">Últimas remeras</h3>
+		
+		%{ i = 0 }%
+		#{list items:newestTShirts, as:'tShirt'}
+			%{
+				i++
+				if(i > 3) i = 1
+				containerClass = ""
+				if(i == 1) containerClass = "alpha"
+				else if(i == 3) containerClass="omega"
+			}%
+			
+			#{if i == 1}
+				<div class="row">
+			#{/if}
+			
+			#{tshirt-link tShirt:tShirt, columns:"four", containerClass:containerClass /}
+			
+			#{if i == 3}
+				</div>
+			#{/if}
+		#{/list}
+		
+		#{list items:categories, as:'category'}
+			<h4 class="ten columns row alpha">${category.name}</h4>
+			<a href="@{Application.category(category.id)}" class="two columns row omega seeMore">Ver más &raquo;</a>	
+			<div class="row">
+				%{ i = 0 %}
+				#{list items:category.getTop4TShirts(), as:'tShirt'}
+					%{
+						i++
+						containerClass = ""
+						if(i == 1) containerClass = "alpha"
+						if(i == 4) containerClass = "omega"
+					}%
+					#{tshirt-link tShirt:tShirt, columns:"three", containerClass:containerClass /}
+				#{/list}
+			</div>	
+		#{/list}
+		
+		<br class="row"/>
+		<h3 class="row" style="text-align: center">
+			¡Y un montón de remeras más! <br/>
+			<a href="@{Application.category(null)}">Hacé click acá para ver más diseños</a>
+		</h3>
+	</div>
+	<div class="four columns">
+		<h4>Custómica en Facebook</h4>
+		<div class="row">
+			<fb:like-box href="http://www.facebook.com/pages/Cust%C3%B3mica/165116230219367"
+				width="220" show_faces="true" border_color="lightgrey"
+				stream="false" header="false"></fb:like-box>
+		</div>
+		
+		<h4>Seguínos en Twitter</h4>
+		<div class="row">
+			<a href="http://twitter.com/Customica" class="twitter-follow-button" data-lang="es">
+				Follow @Customica
+			</a>
+		</div>
+		
+		<h4>Enviamos a todo el país</h4>
+		<p class="row">
+			<img src="/images/correo-argentino.png" class="correoArgentino"/>
+			Todas nuestras remeras incluyen el costo de envío en el precio.
+			¡Elegí la que te guste y recibila en tu casa!
+		</p>
+		
+		<h4>¿Cómo puedo pagar?</h4>
+		<p class="half-bottom">
+			Por <strong>Pago Fácil</strong> imprimiendo tu cupón con código de barras.
+			También aceptamos las siguientes tarjetas:
+		</p>
+		<p class="row">
+			<img src="images/payment-methods.gif" style="width: 220px"/>
+		</p>
+	</div>
+</div>

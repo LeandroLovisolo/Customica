@@ -1,0 +1,84 @@
+#{extends "main.html" /}
+
+<div class="order-page">
+	<h1 class="sixteen columns row">Completá con tus datos</h1>
+	
+	<div class="eight columns">
+		#{ifErrors}
+			<div class="errorbox row">
+				Hay algunos errores en el formulario. Por favor corregilos.
+			</div>
+		#{/ifErrors}
+		
+		#{form @Application.submitOrder() }
+			<input type="hidden" name="id" value="${tShirt.id}"/>
+			<input type="hidden" name="gender" value="${gender}"/>
+			<input type="hidden" name="size" value="${size.name()}"/>
+		
+			<label for="order.name">Nombre completo:</label>
+			<input type="text" name="order.name" value="${flash['order.name']}" class="five columns alpha"/>
+			<div class="three columns omega error">#{error 'order.name' /}</div>
+			<br class="clear"/>
+			
+			<label for="order.email">Email:</label>
+			<input type="text" name="order.email" value="${flash['order.email']}" class="five columns alpha"/>
+			<div class="three columns omega error">#{error 'order.email' /}</div>
+			<br class="clear"/>
+			
+			<label for="order.phone">Teléfono:</label>
+			<input type="text" name="order.phone" value="${flash['order.phone']}" class="five columns alpha"/>
+			<div class="three columns omega error">#{error 'order.phone' /}</div>
+			<br class="clear"/>
+			
+			<label for="order.address">Dirección:</label>
+			<input type="text" name="order.address" value="${flash['order.address']}" class="five columns alpha"/>
+			<div class="three columns omega error">#{error 'order.address' /}</div>
+			<br class="clear"/>
+			
+			<label for="order.zipCode">Código postal:</label>
+			<input type="text" name="order.zipCode" value="${flash['order.zipCode']}" class="five columns alpha"/>
+			<div class="three columns omega error">#{error 'order.zipCode' /}</div>
+			<br class="clear"/>
+			
+			<label for="order.city">Ciudad:</label>
+			<input type="text" name="order.city" value="${flash['order.city']}" class="five columns alpha"/>
+			<div class="three columns omega error">#{error 'order.city' /}</div>
+			<br class="clear"/>
+			
+			<label for="order.province">Provincia:</label>
+			<input type="text" name="order.province" value="${flash['order.province']}" class="five columns alpha"/>
+			<div class="three columns omega error">#{error 'order.province' /}</div>
+			<br class="clear"/>
+			
+			<div class="three columns alpha omega offset-by-one">
+				<a href="javascript:$('form').submit()" class="buy">Continuar</a>
+			</div>
+		#{/form}
+	</div>
+	
+	<div class="eight columns">
+		<hr class="remove-top half-bottom"/>
+		
+		<h3 class="row">Tu pedido</h3>
+		
+		#{tshirt-link tShirt:tShirt, columns:"two", containerClass:"alpha half-bottom", showAuthor:false /}
+		
+		<div class="six columns omega half-bottom">
+			<div class="five columns half-bottom alpha">
+				Remera de ${gender == models.TShirt.Gender.MALE ? "varón" : "mujer"}
+				talle ${size}
+			</div>
+			<div class="one column omega">$${models.TShirt.PRICE}</div>
+			<hr class="remove-top half-bottom dotted"/>
+			
+			<div class="five columns half-bottom alpha">Envío</div>
+			<div class="one column omega">$${models.TShirt.SHIPPING_COST}</div>
+			<hr class="remove-top half-bottom dotted"/>
+			
+			<div class="five columns alpha"><strong>TOTAL:</strong></div>
+			<div class="one column omega"><strong>$${models.TShirt.PRICE + models.TShirt.SHIPPING_COST}</strong></div>
+		</div>
+		
+		<hr/>
+	</div>
+</div>

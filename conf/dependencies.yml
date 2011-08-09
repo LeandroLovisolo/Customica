@@ -1,0 +1,5 @@
+# Application dependencies
+
+require:
+    - play
+    - com.restfb -> restfb 1.6.6

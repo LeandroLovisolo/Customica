@@ -1,0 +1,126 @@
+# Test data
+
+User(leandro):
+    facebookId:      653807819
+
+Category(cine):
+    name:            Cine
+
+Category(geek):
+    name:            Geek
+
+Category(misc):
+    name:            Miscelánea
+    isDefault:       true
+
+Category(tv):
+    name:            Televisión
+
+TShirt(cine1):
+    created:         2011-01-01
+    title:           Cine 1
+    author:          leandro
+    category:        cine
+
+TShirt(cine2):
+    created:         2011-01-02
+    title:           Cine 2
+    author:          leandro
+    category:        cine
+
+TShirt(cine3):
+    created:         2011-01-06
+    title:           Cine 3
+    author:          leandro
+    category:        cine
+
+TShirt(cine4):
+    created:         2011-01-07
+    title:           Cine 4
+    author:          leandro
+    category:        cine
+    
+TShirt(cine5):
+    created:         2011-01-20
+    title:           Cine 5
+    author:          leandro
+    category:        cine
+    
+TShirt(cine6):
+    created:         2011-01-21
+    title:           Cine 6
+    author:          leandro
+    category:        cine        
+
+TShirt(geek1):
+    created:         2011-01-03
+    title:           Geek 1
+    author:          leandro
+    category:        geek
+
+TShirt(geek2):
+    created:         2011-01-04
+    title:           Geek 2
+    author:          leandro
+    category:        geek
+
+TShirt(geek3):
+    created:         2011-01-12
+    title:           Geek 3
+    author:          leandro
+    category:        geek
+
+TShirt(geek4):
+    created:         2011-01-13
+    title:           Geek 4
+    author:          leandro
+    category:        geek
+
+TShirt(misc1):
+    created:         2011-01-15
+    title:           Miscelánea 1
+    author:          leandro
+    category:        misc
+
+TShirt(misc2):
+    created:         2011-01-16
+    title:           Miscelánea 2
+    author:          leandro
+    category:        misc
+
+TShirt(misc3):
+    created:         2011-01-18
+    title:           Miscelánea 3
+    author:          leandro
+    category:        misc
+    
+TShirt(misc4):
+    created:         2011-01-19
+    title:           Miscelánea 4
+    author:          leandro
+    category:        misc
+
+TShirt(tv1):
+    created:         2011-01-20
+    title:           Televisión 1
+    author:          leandro
+    category:        tv
+
+TShirt(tv2):
+    created:         2011-01-21
+    title:           Televisión 2
+    author:          leandro
+    category:        tv
+
+TShirt(tv3):
+    created:         2011-01-22
+    title:           Televisión 3
+    author:          leandro
+    category:        tv
+
+TShirt(tv4):
+    created:         2011-01-23
+    title:           Televisión 4
+    author:          leandro
+    category:        tv
+    

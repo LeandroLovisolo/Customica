@@ -1,0 +1,166 @@
+/* SKELETON EXTENSIONS */
+.remove-top { margin-top: 0px; }
+hr.dotted { border-style: dotted; }
+
+/* GLOBAL */
+a { color: #3293FF !important; }
+ul.tabs a { color: #444 !important; }
+.center { text-align: center; }
+.right { text-align: right; }
+.roundedCorners (@radius: 5px) {
+	border-radius: @radius;
+	-webkit-border-radius: @radius;
+	-moz-border-radius: @radius;
+}
+.buttonLink(@backgroundColor, @hoverColor) {
+	.roundedCorners;
+	background-color: @backgroundColor;
+	&:hover { background-color: @hoverColor; }
+	display: block; padding: 10px; text-align: center;
+	font-family: "Georgia", "Times New Roman", Helvetica, Arial, sans-serif;
+	font-size: 24px; color: white !important; text-decoration: none;
+}
+div.errorbox { padding: 10px; border: 1px solid red; background-color: #fff0f0; }
+
+/* MODALS */
+div#simplemodal-overlay { background-color: black; }
+div#simplemodal-container { background-color: white; }
+div.modal {
+	padding: 10px;
+	border: 5px solid lightgrey;
+	background-color: white;
+	a.close {
+		.roundedCorners;
+		display: block; float: right; height: 20px; padding: 0 10px; 
+		background-color: #328efe; color: white !important; text-decoration: none;
+		font-weight: bold; text-align: center;
+	}
+}
+
+/* main.html */
+div.header {
+	background-color: #222; height: 32px; padding: 5px 0;
+	color: #aaa;
+	a {
+		color: white !important; text-decoration: none;
+		&:hover { text-decoration: underline; }
+	}
+	span.links {
+		position: relative; top: -10px;
+		a { margin-left: 50px; }
+	}
+	div.loggedInControls {
+		img { width: 32px; margin-right: 10px; vertical-align: middle; }
+		text-align: right;
+		a { margin-left: 10px; }
+	}
+	div.loggedOutControls { float: right; padding-top: 5px; }
+}
+div.main { background-color: white; }
+div.footer {
+	border-top: 1px solid lightgrey;
+	div.like { overflow: hidden; height: 45px; border-bottom: 1px solid lightgrey; }
+	.item { float: left; margin-right: 20px; }
+	div.copyright { text-align: right; }
+}
+
+/* index.html */
+div.index-page {
+	img.correoArgentino { float: right; width: 100px; margin: 5px 0px 5px 5px; }
+	a.seeMore { position: relative; top: 5px; text-align: right; }
+}
+
+/* tshirt-link.html */
+div.tshirt-link {
+	text-align: center;
+	h5 a { color: #181818 !important; text-decoration: none; }
+	div.author {
+		position: relative; top: -5px; font-size: 12px;
+		img { width: 20px; position: relative; top: 5px; }
+	}
+}
+
+/* category.html */
+div.category-page {
+	ul.categories li a {
+		display: block; padding: 8px;
+		border: 1px solid lightgrey; font-weight: bold;
+		color: #181818 !important; text-decoration: none;
+		&.current { border: none; background-color: gray; color: white !important; }
+	}
+}
+
+/* tshirt.html */
+div.tshirt-page {
+	div.sizePicker {
+		div.size {
+			.roundedCorners;
+			float: left; width: 40px; height: 25px; padding-top: 5px; margin-right: 10px;
+			border: 1px solid; cursor: pointer; text-align: center;
+		}
+		&.male div.size {
+			@color: #328EFE;
+			border-color: @color;
+			color: @color;
+			&.selected { color: white; background-color: @color; }
+		}
+		&.female div.size {
+			@color: #FE9999;
+			border-color: @color;
+			color: @color;
+			&.selected { color: white; background-color: @color; }
+		}
+	}
+	p.authorLinks {
+		padding: 10px; border: 1px solid orange; background-color: lightyellow; text-align: center;
+		a.delete { color: red !important; }
+	}
+	div.chooseSize { display: none; color: red; text-align: center; }
+	a.buy { .buttonLink(#FF7400, #FFB400); }
+	div.author {
+		text-align: center;
+		span { position: relative; top: 5px; }
+		img { width: 30px; vertical-align: top; }
+	}
+}
+div#sizesModal {
+	div.guys {
+		float: left;
+		padding-right: 10px;
+		table {
+			border-top: 1px solid #aaf;
+			border-left: 1px solid #aaf;
+			th, td {
+				padding: 10px;
+				border-bottom: 1px solid #aaf;
+				border-right: 1px solid #aaf;
+			}
+			th, tr.even td { background-color: #eef; }
+		}
+	}
+	div.girls {
+		float: right;
+		table {
+			border-top: 1px solid #faa;
+			border-left: 1px solid #faa;
+			th, td {
+				padding: 10px;
+				border-bottom: 1px solid #faa;
+				border-right: 1px solid #faa;
+			}
+			th, tr.even td { background-color: #fee; }	
+		}			
+	}
+}
+
+/* order.html */
+div.order-page {
+	div.error { position: relative; top: 5px; font-weight: bold; color: red; }	
+	a.buy { .buttonLink(#008500, #00CC00); }
+}
+
+/* designer.html */
+div.designer-page {
+	a.save { .buttonLink(#008500, #00CC00); }
+	small.requiresFacebook { text-align: center; color: gray; }
+}

@@ -1,0 +1,54 @@
+#{extends "main.html" /}
+
+<div class="category-page">
+	<h1 class="ten columns row">${category == null ? 'Últimas remeras' : category.name}</h1>
+	<h3 class="six columns right"><a href="@{Application.designer}">¡Diseñá tu remera!</a></h3>
+	<br class="clear"/>
+	
+	<div class="four columns">
+		<h4 class="half-bottom">Categorías</h4>
+		<ul class="categories">
+			<li>
+				<a href="@{Application.category(null)}" class="${category == null ? 'current' : ''}">
+					Últimas remeras
+				</a>
+			</li>
+			#{list items:categories, as:'aCategory'}
+				<li>
+					<a href="@{Application.category(aCategory.id)}"
+							class="${category != null && aCategory == category ? 'current' : ''}">
+						${aCategory.name}
+					</a>
+				</li>
+			#{/list}
+		</ul>
+	</div>
+	<div class="twelve columns">
+		%{ i = 0 }%
+		#{list items:tShirts, as:'tShirt'}
+			%{
+				i++
+				if(i > 4) i = 1
+				containerClass = ""
+				if(i == 1) containerClass = "alpha"
+				else if(i == 4) containerClass="omega"
+			}%
+			
+			#{if i == 1}
+				<div class="row">
+			#{/if}
+			
+			#{tshirt-link tShirt:tShirt, columns:"three", containerClass:containerClass /}
+			
+			#{if i == 4 || tShirt_isLast}
+				</div>
+			#{/if}
+		#{/list}
+		
+		<br class="row"/>
+		<h3 class="row" style="text-align: center">
+			¿No encontrás la remera que buscás? <br/>
+			<a href="@{Application.designer}">¡Diseñala vos!</a>
+		</h3>
+	</div>
+</div>

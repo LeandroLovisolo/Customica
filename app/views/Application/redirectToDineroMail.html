@@ -1,0 +1,53 @@
+<!doctype html>
+<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html lang="en" xmlns:fb="http://www.facebook.com/2008/fbml"> <!--<![endif]-->
+<head>
+	<title>Custómica</title>
+	
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	 
+	<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
+	<link rel="shortcut icon" href="/images/favicon.ico">
+	
+	<link rel="stylesheet" href="/stylesheets/skeleton/skeleton.css">
+	<link rel="stylesheet" href="/stylesheets/skeleton/base.css">
+	<link rel="stylesheet" href="/stylesheets/skeleton/layout.css">
+	<link rel="stylesheet/less" href="/stylesheets/styles.less">
+	
+    <script src="/javascripts/jquery-1.5.1.min.js"></script>
+	<script src="/javascripts/skeleton.js"></script>
+	<script src="/javascripts/less-1.1.3.min.js"></script>
+	
+	<script type="text/javascript">
+		$(function() {
+			$("html").css("cursor", "wait");
+			setTimeout(function() {
+				$("#redirect").submit();
+			}, 1000);
+		});
+	</script>
+</head>
+<body>
+	<div class="container">
+		<div class="sixteen columns">
+			<div class="center">
+				<br class="row"/>
+				<h1 class="row">Procesando tu pedido...</h1>
+				<br class="row"/>
+				<img src="/images/loading.gif" class="row"/>
+				<br class="row"/>
+				<h3 class="subheader">Por favor esperá.</h3>
+				<br class="row"/>
+			</div>	
+		
+			<form action="${post.getUrl()}" method="post" id="redirect">
+				#{list items:post.getParameters(), as:'parameter'}
+					<input type="hidden" name="${parameter.getName()}" value="${parameter.getValue()}"/>
+				#{/list}
+			</form>
+		</div>
+	</div>
+</body>

@@ -1,0 +1,20 @@
+%{ if(_showAuthor == null) _showAuthor = true }%
+
+<div class="${_columns} columns ${_containerClass} tshirt-link">
+	<a href="@{Application.tshirt(_tShirt.id)}">
+		<img src="/images/t1.png" class="${_columns} columns alpha omega"/>
+	</a>
+	<span class="${_columns} columns alpha omega">
+		<h5><a href="@{Application.tshirt(_tShirt.id)}">${_tShirt.title}</a></h5>
+		
+		#{if _showAuthor}
+			<div class="author">
+				por
+				<span class="profilePic">
+					<fb:profile-pic facebook-logo="false" linked="false" size="square" uid="${_tShirt.author.facebookId}"></fb:profile-pic>
+				</span>
+				<fb:name useyou="false" linked="false" uid="${_tShirt.author.facebookId}"></fb:name>
+			</div>
+		#{/if} 
+	</span>
+</div>

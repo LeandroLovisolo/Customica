@@ -1,0 +1,170 @@
+#{extends "main.html" /}
+
+<div class="tshirt-page">
+	<script type="text/javascript">
+		$(SizePicker.initialize);
+		$(BuyButton.initialize);
+		$(function() {
+			$("a.delete").click(function() {
+				return confirm("¿Estás seguro que querés eliminar esta remera?");
+			});
+		});
+	</script>
+
+	<h1 class="ten columns row">${tShirt.title}</h1>
+	<h3 class="six columns right"><a href="@{Application.designer}">¡Diseñá tu remera!</a></h3>
+	
+	<div class="eight columns">
+		<img src="/images/tee-big.png" class="row"/>
+		
+		<div class="author row">
+			<span>Por </span>
+			<fb:profile-pic facebook-logo="false" linked="false" size="square" uid="${tShirt.author.facebookId}"></fb:profile-pic>
+			<span>
+				<fb:name useyou="false" linked="false" uid="${tShirt.author.facebookId}"></fb:name>
+			</span>
+		</div>
+		
+		<br class="row"/>
+		
+		<h4 class="row">Más remeras en <a href="@{Application.category(tShirt.category.id)}">${tShirt.category.name}</a></h4>
+		
+		#{list items:moreTShirtsInCategory, as:'aTShirt'}
+			%{
+				containerClass = ""
+				if(aTShirt_isFirst) containerClass = "alpha"
+				if(aTShirt_isLast) containerClass = "omega"
+			}% 
+			#{tshirt-link tShirt:aTShirt, columns:"two", containerClass:containerClass, showAuthor:false /}
+		#{/list}
+	</div>
+	
+	<div class="eight columns">
+	
+		#{if tShirt.isAuthorLoggedIn()}
+		<p class="authorLinks">
+			Esta remera la diseñaste vos.
+			La podés
+			<a href="@{Application.designer(tShirt.id)}">editar</a> o
+			<a href="@{Application.deleteTShirt(tShirt.id)}" class="delete">eliminar</a>.
+			
+		</p>
+		#{/if}
+	
+		<ul class="gender tabs">
+			<li><a class="active" href="#male">Varón</a></li>
+			<li><a href="#female">Mujer</a></li>
+		</ul>
+		<ul class="tabs-content">
+			<li class="active" id="maleTab">
+				<h4 class="half-bottom">Remera de varón</h4>
+			</li>
+			<li id="femaleTab">
+				<h4 class="half-bottom">Remera de mujer</h4>
+			</li>
+		</ul>	
+				
+		<div class="sizePicker six columns alpha">
+		</div>
+		<a href="javascript:Modal.show('sizesModal')" class="two columns omega right">Medidas acá</a>	
+		
+		<br class="row"/>
+		<br class="row"/>
+		<br class="row"/>
+		
+		<h3 class="three columns row alpha center">$${models.TShirt.PRICE}</h3>
+		<div class="five columns row omega">
+			<div class="chooseSize">ELEGÍ UN TALLE</div>
+			<a href="javascript:$('#form').submit()" class="buy">¡Comprar!</a>
+		</div>
+		
+		<form action="@{Application.buyButton}" method="get" id="form">
+			<input type="hidden" name="id" value="${tShirt.id}"/>
+			<input type="hidden" id="genderField" name="gender" value="MALE"/>
+			<select id="sizeField" name="size" style="display: none">
+				#{list items:models.TShirt.Size.values(), as:'size'}
+					<option value="${size.name()}">${size}</option>
+				#{/list}
+			</select>
+		</form>
+		
+		<br class="row"/>
+		<br class="row"/>
+		
+		<br class="clear row"/>
+		
+		<h4 class="half-bottom">Decí algo lindo</h4>
+		<fb:comments numposts="30" width="460" xid="T${tShirt.id}"></fb:comments>
+	</div>
+	
+	<div id="sizesModal" class="modal" style="display: none">
+		<a href="javascript:Modal.hide()" class="close">Cerrar</a>
+		<h4 class="row">Talles y medidas</h4>
+		
+		<div class="guys"> 
+			<h5>Chicos</h5> 
+			<table cellpadding="0" cellspacing="0"> 
+				<tr> 
+					<th>Talle</th> 
+					<th>Pecho</th> 
+				</tr> 
+				<tr> 
+					<td>S</td> 
+					<td>45 cm</td> 
+				</tr> 
+				<tr class="even"> 
+					<td>M</td> 
+					<td>50 cm</td> 
+				</tr> 
+				<tr> 
+					<td>L</td> 
+					<td>55 cm</td> 
+				</tr> 
+				<tr class="even"> 
+					<td>XL</td> 
+					<td>60 cm</td> 
+				</tr> 
+				<tr> 
+					<td>XXL</td> 
+					<td>65 cm</td> 
+				</tr> 
+			</table> 
+		</div> 
+		<div class="girls"> 
+			<h5>Chicas</h5> 
+			<table cellpadding="0" cellspacing="0"> 
+				<tr> 
+					<th>Talle</th> 
+					<th>Pecho</th> 
+					<th>Cintura</th> 
+				</tr> 
+				<tr> 
+					<td>S</td> 
+					<td>40 cm</td> 
+					<td>35 cm</td> 
+				</tr> 
+				<tr class="even"> 
+					<td>M</td> 
+					<td>45 cm</td> 
+					<td>50 cm</td> 
+				</tr> 
+				<tr> 
+					<td>L</td> 
+					<td>50 cm</td> 
+					<td>45 cm</td> 
+				</tr> 
+				<tr class="even"> 
+					<td>XL</td> 
+					<td>55 cm</td> 
+					<td>50 cm</td> 
+				</tr> 
+				<tr> 
+					<td>XXL</td> 
+					<td>60 cm</td> 
+					<td>55 cm</td> 
+				</tr> 
+			</table> 
+		</div>
+		<br class="clear"/>
+	</div>
+</div>

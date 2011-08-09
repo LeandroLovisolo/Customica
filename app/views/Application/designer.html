@@ -1,0 +1,85 @@
+#{extends 'main.html' /}
+
+<script type="text/javascript">
+	var isDesignerInitialized = false;
+	
+	// Called by the designer applet after it finishes loading.
+	function onDesignerInitialized() {
+		isDesignerInitialized = true;
+		
+		#{if xml != null}
+			$('#Designer')[0].load("${xml.raw()}");
+		#{/if}
+	}
+	
+	function onSubmit() {
+		if(!isDesignerInitialized) return false;
+		
+		// Validate
+		if($.trim($("#title").val()).length == 0) {
+			$("div.errorbox").css("display", "block");
+			return false;
+		}
+		
+		$("div.errorbox").css("display", "none");
+		
+		if(FB.getSession() == null) {
+			FB.login(function(response) {
+				if(response.session != null) {
+					$("form").submit();
+				}
+			}, {scope: "email,publish_stream"});
+			return false;
+		}
+		
+		$("#xml").val($("#Designer")[0].save());
+	}
+	
+	
+	$(function() {
+		$("form").submit(onSubmit);
+		swfobject.embedSWF("/swf/Designer.swf", "Designer", "630", "700", "9.0.0", null,
+				{"wmode": "transparent"}, {"wmode": "transparent"});
+	});
+</script>
+
+<div class="designer-page sixteen columns">
+	<h1 class="row">Diseñá tu remera</h1>
+	
+	<div class="eleven columns alpha">
+		<div id="Designer"></div>
+	</div>
+	<div class="five columns omega">
+		#{form @Application.submitDesign() }
+			<input type="hidden" name="id" value="${tShirt?.id}"/>
+			<input type="hidden" name="xml" id="xml" value=""/>
+		
+			<div class="errorbox row" style="display: none">Tenés que darle un nombre a la remera.</div>
+			
+			<label for="title">Nombre de tu remera:</label>
+			<input type="text" name="title" id="title" value="${tShirt?.title}" style="width: 270px"/>
+			
+			<label for="category">Categoría:</label>
+			<select name="categoryId" style="width: 100%">
+				#{list items:categories, as:'category'}
+					%{ if(tShirt == null) selected = category.isDefault; else selected = tShirt.category.id == category.id }%
+					<option value="${category.id}" ${selected ? 'selected="selected"' : ''}>
+						${category.name}
+					</option>
+				#{/list}
+			</select>
+			<label for="shareOnFacebook">
+				<input type="checkbox" name="shareOnFacebook" id="shareOnFacebook" checked="checked"/>
+				<span>Quiero compartir esta remera en Facebook.</span>
+			</label>
+			
+			<br class="row"/>
+			
+			<a href="javascript:$('form').submit()" class="save">
+				Guardar
+			</a>
+			
+			<small class="requiresFacebook five columns alpha omega">Require que te conectes con tu cuenta de Facebook.</small>
+		#{/form}
+	</div>
+</div>

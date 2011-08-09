@@ -1,0 +1,27 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+
+# Home page
+GET     /                                       Application.index
+GET     /categoria/{id}                         Application.category
+GET     /categoria                              Application.category
+GET     /remera/{id}                            Application.tshirt
+GET     /comprar/remera-{id}/{gender}/{size}    Application.order
+POST    /comprar                                Application.submitOrder
+GET     /dineromail                             Application.redirectToDineroMail
+GET     /gracias                                Application.thanks
+GET     /designer/{id}                          Application.designer
+GET     /designer                               Application.designer
+POST    /designer                               Application.submitDesign
+GET     /eliminar/{id}                          Application.deleteTShirt
+
+*       /admin                                  module:crud
+
+# Map static resources from the /app/public folder to the /public path
+GET     /javascripts                            staticDir:public/javascripts
+GET     /images                                 staticDir:public/images
+GET     /stylesheets                            staticDir:public/stylesheets
+GET     /swf                                    staticDir:public/swf
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}
