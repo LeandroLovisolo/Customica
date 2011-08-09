@@ -8,6 +8,7 @@ import models.TShirt.Gender;
 import models.TShirt.Size;
 import models.dineromail.DineroMailHttpPost;
 import models.dineromail.DineroMailHttpPostFactory;
+import play.Play;
 import play.data.validation.Valid;
 import play.mvc.Controller;
 import play.mvc.Router;
@@ -17,6 +18,7 @@ public class Application extends Controller {
 	private static final String LOGO_URL = "http://customica.com/images/logo.png";
 	
     public static void index() {
+    	System.out.println("application path: " + Play.applicationPath);
     	renderArgs.put("newestTShirts", TShirt.findLatest6());
     	renderArgs.put("categories", Category.findAll());
     	render();
@@ -111,14 +113,9 @@ public class Application extends Controller {
     	if(id != null) tShirt = TShirt.findById(id);
     	
     	if(tShirt == null) {
-    		tShirt = TShirt.create(title, xml, categoryId);
+    		tShirt = TShirt.create(title, categoryId, xml);
     	} else {
-    		if(!tShirt.isAuthorLoggedIn()) error("User is not author.");
-    		tShirt.xml = xml;
-    		tShirt.title = title;
-    		tShirt.category = Category.findById(categoryId);
-    		if(tShirt.category == null) error("Category doesn't exist.");
-    		tShirt.save();
+    		tShirt.update(title, categoryId, xml);
     	}
     	
     	tshirt(tShirt.id);

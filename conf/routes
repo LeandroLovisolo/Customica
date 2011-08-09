@@ -22,6 +22,7 @@ GET     /javascripts                            staticDir:public/javascripts
 GET     /images                                 staticDir:public/images
 GET     /stylesheets                            staticDir:public/stylesheets
 GET     /swf                                    staticDir:public/swf
+GET     /designs                                staticDir:public/designs
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

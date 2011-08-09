@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
+import play.Play;
 import play.db.jpa.Model;
 
 @Entity
@@ -41,6 +42,9 @@ public class TShirt extends Model {
 	public static final Integer PRICE = 50;
 	public static final Integer SHIPPING_COST = 25;
 
+	private static final String BASE_DESIGN_PATH = Play.applicationPath + "/public/designs";
+	private static final String BASE_DESIGN_URL = "/designs";
+	
 	public Date created;
 	public String title;
 	
@@ -53,7 +57,7 @@ public class TShirt extends Model {
 	@ManyToOne
 	public Category category;
 	
-	public static TShirt create(String title, String xml, Long categoryId) {
+	public static TShirt create(String title, Long categoryId, String xml) {
 		TShirt tShirt = new TShirt();
 		tShirt.created = new Date();
 		tShirt.title = title;
@@ -63,11 +67,30 @@ public class TShirt extends Model {
 		if(tShirt.author == null) throw new RuntimeException("User not logged in.");
 		if(tShirt.category == null) throw new RuntimeException("Category doesn't exist.");
 		tShirt.save();
+		ThumbnailService.get().generateDesignAndThumbnail(tShirt);
 		return tShirt;
+	}
+	
+	public void update(String title, Long categoryId, String xml) {
+		if(!isAuthorLoggedIn()) throw new RuntimeException("User is not author.");
+		this.title = title;
+		this.category = Category.findById(categoryId);
+		this.xml = xml;
+		if(this.category == null) throw new RuntimeException("Category doesn't exist.");
+		save();
+		ThumbnailService.get().generateDesignAndThumbnail(this);
 	}
 	
 	public boolean isAuthorLoggedIn() {
 		return User.current() == author;
+	}
+	
+	public String getDesignPath() {
+		return BASE_DESIGN_PATH + "/" + id + ".png";
+	}
+	
+	public String getThumbnailPath() {
+		return BASE_DESIGN_PATH + "/" + id + "_thumb.png";
 	}
 	
 	public static List<TShirt> findLatest6() {
