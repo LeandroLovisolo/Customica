@@ -2,7 +2,7 @@
 
 <div class="${_columns} columns ${_containerClass} tshirt-link">
 	<a href="@{Application.tshirt(_tShirt.id)}">
-		<img src="/images/t1.png" class="${_columns} columns alpha omega"/>
+		<img src="${_tShirt.getThumbnailUrl()}" class="${_columns} columns alpha omega"/>
 	</a>
 	<span class="${_columns} columns alpha omega">
 		<h5><a href="@{Application.tshirt(_tShirt.id)}">${_tShirt.title}</a></h5>

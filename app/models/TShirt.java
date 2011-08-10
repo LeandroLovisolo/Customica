@@ -86,11 +86,27 @@ public class TShirt extends Model {
 	}
 	
 	public String getDesignPath() {
-		return BASE_DESIGN_PATH + "/" + id + ".png";
+		return BASE_DESIGN_PATH + "/" + getDesignFilename();
 	}
 	
 	public String getThumbnailPath() {
-		return BASE_DESIGN_PATH + "/" + id + "_thumb.png";
+		return BASE_DESIGN_PATH + "/" + getThumbnailFilename();
+	}
+	
+	public String getDesignUrl() {
+		return BASE_DESIGN_URL + "/" + getDesignFilename();
+	}
+	
+	public String getThumbnailUrl() {
+		return BASE_DESIGN_URL + "/" + getThumbnailFilename();
+	}	
+	
+	private String getDesignFilename() {
+		return id + ".png";
+	}
+	
+	private String getThumbnailFilename() {
+		return id + "_thumb.png";
 	}
 	
 	public static List<TShirt> findLatest6() {
