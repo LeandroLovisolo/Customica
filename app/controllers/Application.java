@@ -1,14 +1,12 @@
 package controllers;
 
 import models.Category;
-import models.FacebookService;
 import models.Order;
 import models.TShirt;
 import models.TShirt.Gender;
 import models.TShirt.Size;
 import models.dineromail.DineroMailHttpPost;
 import models.dineromail.DineroMailHttpPostFactory;
-import play.Play;
 import play.data.validation.Valid;
 import play.mvc.Controller;
 import play.mvc.Router;
@@ -18,7 +16,6 @@ public class Application extends Controller {
 	private static final String LOGO_URL = "http://customica.com/images/logo.png";
 	
     public static void index() {
-    	System.out.println("application path: " + Play.applicationPath);
     	renderArgs.put("newestTShirts", TShirt.findLatest6());
     	renderArgs.put("categories", Category.findAll());
     	render();

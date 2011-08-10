@@ -15,7 +15,10 @@ GET     /designer                               Application.designer
 POST    /designer                               Application.submitDesign
 GET     /eliminar/{id}                          Application.deleteTShirt
 
-*       /admin                                  module:crud
+GET     /admin                                  Admin.index
+GET     /admin/regenerate                       Admin.regenerateDesigns
+*       /admin                                  module:secure
+*       /admin/crud                             module:crud
 
 # Map static resources from the /app/public folder to the /public path
 GET     /javascripts                            staticDir:public/javascripts
