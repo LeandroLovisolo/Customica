@@ -28,7 +28,6 @@ public class DesignRenderingService {
 		return instance;
 	}
 	
-
 	private DesignRenderingService() {
 	}
 	
