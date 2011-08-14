@@ -21,11 +21,11 @@ GET     /admin/regenerate                       Admin.regenerateDesigns
 *       /admin/crud                             module:crud
 
 # Map static resources from the /app/public folder to the /public path
-GET     /javascripts                            staticDir:public/javascripts
-GET     /images                                 staticDir:public/images
-GET     /stylesheets                            staticDir:public/stylesheets
-GET     /swf                                    staticDir:public/swf
-GET     /designs                                staticDir:public/designs
+GET     /javascripts                            staticDir:public/javascripts/
+GET     /images                                 staticDir:public/images/
+GET     /stylesheets                            staticDir:public/stylesheets/
+GET     /swf                                    staticDir:public/swf/
+GET     /designs                                staticDir:public/designs/
 
 # Catch all
 *       /{controller}/{action}                  {controller}.{action}

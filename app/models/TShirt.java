@@ -1,7 +1,9 @@
 package models;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.Lob;
@@ -9,6 +11,8 @@ import javax.persistence.ManyToOne;
 
 import play.Play;
 import play.db.jpa.Model;
+import play.mvc.Http;
+import play.mvc.Router;
 
 @Entity
 public class TShirt extends Model {
@@ -57,7 +61,7 @@ public class TShirt extends Model {
 	@ManyToOne
 	public Category category;
 	
-	public static TShirt create(String title, Long categoryId, String xml) {
+	public static TShirt create(String title, Long categoryId, String xml, boolean shareOnFacebook) {
 		TShirt tShirt = new TShirt();
 		tShirt.created = new Date();
 		tShirt.title = title;
@@ -68,7 +72,21 @@ public class TShirt extends Model {
 		if(tShirt.category == null) throw new RuntimeException("Category doesn't exist.");
 		tShirt.save();
 		ThumbnailService.get().generateDesignAndThumbnail(tShirt);
+		System.out.println("Share on facebook? " + shareOnFacebook);
+		//if(shareOnFacebook) shareOnFacebook(tShirt);
 		return tShirt;
+	}
+
+	private static void shareOnFacebook(TShirt tShirt) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("id", tShirt.id);
+		FacebookService.get().postToWall(
+				"",
+				Http.Request.current().getBase() + tShirt.getThumbnailUrl(),
+				Router.getFullUrl("Application.tshirt", params),
+				"¡Miren la remera que diseñé!",
+				tShirt.title,
+				"Entrá a Customica.com y diseñá la tuya.");
 	}
 	
 	public void update(String title, Long categoryId, String xml) {

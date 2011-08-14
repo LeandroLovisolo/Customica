@@ -103,14 +103,14 @@ public class Application extends Controller {
     	render();
     }
     
-    public static void submitDesign(Long id, String xml, String title, Long categoryId) {
+    public static void submitDesign(Long id, String xml, String title, Long categoryId, boolean shareOnFacebook) {
     	if(xml == null || title == null || categoryId == null) error("Invalid input.");
     	
     	TShirt tShirt = null;
     	if(id != null) tShirt = TShirt.findById(id);
     	
     	if(tShirt == null) {
-    		tShirt = TShirt.create(title, categoryId, xml);
+    		tShirt = TShirt.create(title, categoryId, xml, shareOnFacebook);
     	} else {
     		tShirt.update(title, categoryId, xml);
     	}

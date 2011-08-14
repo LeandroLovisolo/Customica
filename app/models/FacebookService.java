@@ -8,10 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import play.Logger;
 import play.libs.Codec;
 import play.mvc.Http;
-import play.mvc.Http.Cookie;
-import play.mvc.Http.Request;
+
+import com.restfb.DefaultFacebookClient;
+import com.restfb.Facebook;
+import com.restfb.FacebookClient;
+import com.restfb.Parameter;
+import com.restfb.exception.FacebookException;
+import com.restfb.types.FacebookType;
 
 public class FacebookService {
 	
@@ -78,44 +84,18 @@ public class FacebookService {
 		}
 	}
 	
-	/*
-	
-	private FacebookClient getFacebookClient(Request request) {
-		return new DefaultFacebookClient(getCookieProperty(CookieProperties.ACCESS_TOKEN, request));
+	private FacebookClient getFacebookClient() {
+		return new DefaultFacebookClient(getCookieProperty(CookieProperties.ACCESS_TOKEN));
 	}
-	
-	public String getUserEmail(Request request) throws FacebookException {
-		FacebookClient facebookClient = getFacebookClient(request);
+
+	public String getUserEmail() throws FacebookException {
+		FacebookClient facebookClient = getFacebookClient();
 		com.restfb.types.User user = facebookClient.fetchObject("me", com.restfb.types.User.class);
 		return user.getEmail();
 	}
 	
-	public void postToWall(String message, Request request) {
-		FacebookClient facebookClient = getFacebookClient(request);		
-		try {
-			FacebookType response = facebookClient.publish(
-					"me/feed",
-					FacebookType.class,
-				    Parameter.with("message", "¡Acabo de diseñar una remera!"),
-				    Parameter.with("picture", "http://customica.com/tShirtThumbnail?id=23"),
-				    Parameter.with("link", "http://customica.com/remera/23/johnny-bravo"),
-				    Parameter.with("name", "Johnny Bravo"),
-				    Parameter.with("caption", "Customica.com"),
-				    Parameter.with("description",
-				    		"Johnny Bravo es una serie de dibujos animados sobre una persona inocentemente engreída, " +
-				    		"que persigue a todas las mujeres que pasan por su lado. Busca constantemente una mujer " +
-				    		"que esté dispuesta a quedar con él, pero incluso cuando parece que encuentra una, las " +
-				    		"cosas salen mal. Johnny Bravo se parece a James Dean y es tremendamente narcisista. " +
-				    		"Vive en una ciudad ficticia llamada Aron City. La serie se emite en Cartoon Network " +
-				    		"y fue creada por Van Partible."));
-			logger.debug("Published message ID: " + response.getId());
-		} catch (FacebookException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
 	public void postToWall(String message, String picture, String link, String name, String caption, String description) {
-		FacebookClient facebookClient = getFacebookClient((WebRequest) RequestCycle.get().getRequest());		
+		FacebookClient facebookClient = getFacebookClient();		
 		try {
 			FacebookType response = facebookClient.publish(
 					"me/feed",
@@ -126,7 +106,7 @@ public class FacebookService {
 				    Parameter.with("name", name),
 				    Parameter.with("caption", caption),
 				    Parameter.with("description", nonNull(description)));
-			logger.debug("Published message ID: " + response.getId());
+			Logger.debug("Published Facebook message ID: " + response.getId());
 		} catch (FacebookException e) {
 			throw new RuntimeException(e);
 		}
@@ -136,13 +116,13 @@ public class FacebookService {
 		return string == null ? "" : string;
 	}
 	
-	public static class Permissions {
-		@Facebook(value="publish_stream")
-		Integer publishStream;
-	}
-	
-	public boolean hasPublishStreamPermission(WebRequest request) {
-		FacebookClient facebookClient = getFacebookClient(request);		
+	public boolean hasPublishStreamPermission() {
+		class Permissions {
+			@Facebook(value="publish_stream")
+			Integer publishStream;
+		}
+		
+		FacebookClient facebookClient = getFacebookClient();		
 		List<Permissions> results = null;
 		try {
 			results = facebookClient.executeQuery(
@@ -153,8 +133,6 @@ public class FacebookService {
 		}
 		return results.get(0).publishStream == 1;
 	}
-	
-	*/
 	
 	private String getCookieProperty(CookieProperties cookieProperty) {
 		return getCookieProperty(cookieProperty.propertyName);

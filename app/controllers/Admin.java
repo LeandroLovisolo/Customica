@@ -7,7 +7,7 @@ import controllers.admin.RegenerateDesignsJob;
 public class Admin extends Secure {
 
 	public static void index() {
-		renderTemplate("admin/Admin/admin.html");
+		renderTemplate("Admin/admin.html");
 	}
 	
 	public static void regenerateDesigns() {
