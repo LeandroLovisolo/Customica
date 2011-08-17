@@ -38,8 +38,11 @@
 	
 	$(function() {
 		$("form").submit(onSubmit);
+		
 		swfobject.embedSWF("/swf/Designer.swf", "Designer", "630", "700", "9.0.0", null,
 				{"wmode": "transparent"}, {"wmode": "transparent"});
+				
+		mpmetrics.track("designerPage");
 	});
 </script>
 
