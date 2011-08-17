@@ -97,7 +97,7 @@ public class Application extends Controller {
     		if(tShirt == null) error("TShirt doesn't exist");
     		if(!tShirt.isAuthorLoggedIn()) error("User is not author.");
     		renderArgs.put("tShirt", tShirt);
-    		renderArgs.put("xml", tShirt.xml.replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"));
+    		renderArgs.put("xml", new String(tShirt.xml).replace("\"", "\\\"").replace("\r", "\\r").replace("\n", "\\n"));
     	}
     	renderArgs.put("categories", Category.findAll());
     	render();
@@ -110,9 +110,9 @@ public class Application extends Controller {
     	if(id != null) tShirt = TShirt.findById(id);
     	
     	if(tShirt == null) {
-    		tShirt = TShirt.create(title, categoryId, xml, shareOnFacebook);
+    		tShirt = TShirt.create(title, categoryId, xml.getBytes(), shareOnFacebook);
     	} else {
-    		tShirt.update(title, categoryId, xml);
+    		tShirt.update(title, categoryId, xml.getBytes());
     	}
     	
     	tshirt(tShirt.id);

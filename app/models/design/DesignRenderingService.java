@@ -32,7 +32,9 @@ public class DesignRenderingService {
 	}
 	
 	public BufferedImage render(TShirt tShirt) {
-		Design design = DesignParser.parse(tShirt.xml);
+		byte[] xml = null;
+		xml = tShirt.xml;
+		Design design = DesignParser.parse(xml);
 		
 		BufferedImage designImage = new BufferedImage(FULL_SIZE_DESIGN_WIDTH, FULL_SIZE_DESIGN_HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = designImage.createGraphics();

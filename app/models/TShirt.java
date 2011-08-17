@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import play.Play;
@@ -52,8 +52,8 @@ public class TShirt extends Model {
 	public Date created;
 	public String title;
 	
-	@Lob
-	public String xml;
+    @Column(columnDefinition="LONGBLOB") 
+	public byte[] xml;
 	
 	@ManyToOne
 	public User author;
@@ -61,7 +61,7 @@ public class TShirt extends Model {
 	@ManyToOne
 	public Category category;
 	
-	public static TShirt create(String title, Long categoryId, String xml, boolean shareOnFacebook) {
+	public static TShirt create(String title, Long categoryId, byte[] xml, boolean shareOnFacebook) {
 		TShirt tShirt = new TShirt();
 		tShirt.created = new Date();
 		tShirt.title = title;
@@ -73,7 +73,7 @@ public class TShirt extends Model {
 		tShirt.save();
 		ThumbnailService.get().generateDesignAndThumbnail(tShirt);
 		System.out.println("Share on facebook? " + shareOnFacebook);
-		//if(shareOnFacebook) shareOnFacebook(tShirt);
+		if(shareOnFacebook) shareOnFacebook(tShirt);
 		return tShirt;
 	}
 
@@ -89,7 +89,7 @@ public class TShirt extends Model {
 				"Entrá a Customica.com y diseñá la tuya.");
 	}
 	
-	public void update(String title, Long categoryId, String xml) {
+	public void update(String title, Long categoryId, byte[] xml) {
 		if(!isAuthorLoggedIn()) throw new RuntimeException("User is not author.");
 		this.title = title;
 		this.category = Category.findById(categoryId);

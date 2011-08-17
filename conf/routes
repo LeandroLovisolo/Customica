@@ -16,6 +16,7 @@ POST    /designer                               Application.submitDesign
 GET     /eliminar/{id}                          Application.deleteTShirt
 
 GET     /admin                                  Admin.index
+GET     /admin/import                           Admin.importDesigns
 GET     /admin/regenerate                       Admin.regenerateDesigns
 *       /admin                                  module:secure
 *       /admin/crud                             module:crud

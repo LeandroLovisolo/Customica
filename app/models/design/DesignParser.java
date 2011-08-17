@@ -15,7 +15,7 @@ public class DesignParser {
 	private Document document;
 	private Design design;
 	
-	public static Design parse(String xml) {
+	public static Design parse(byte[] xml) {
 		try {
 			return new DesignParser(xml).design;
 		} catch (DocumentException e) {
@@ -23,8 +23,8 @@ public class DesignParser {
 		}
 	}
 
-	private DesignParser(String xml) throws DocumentException {
-		document = new SAXReader().read(new StringReader(xml));
+	private DesignParser(byte[] xml) throws DocumentException {
+		document = new SAXReader().read(new StringReader(new String(xml)));
 		parseDesign();
 	}
 	
