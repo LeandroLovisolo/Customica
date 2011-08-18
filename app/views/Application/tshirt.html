@@ -75,7 +75,7 @@
 		<h3 class="three columns row alpha center">$${models.TShirt.PRICE}</h3>
 		<div class="five columns row omega">
 			<div class="chooseSize">ELEGÍ UN TALLE</div>
-			<a href="javascript:$('#form').submit()" class="buy">¡Comprar!</a>
+			<a href="#" onclick="$('#form').submit(); return false" class="buy">¡Comprar!</a>
 		</div>
 		
 		<form action="@{Application.buyButton}" method="get" id="form">

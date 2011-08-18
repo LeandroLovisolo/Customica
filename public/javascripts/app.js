@@ -3,11 +3,11 @@ var LoginControls = {
 	initialize: function() {
 		FB.Event.subscribe("auth.login", LoginControls.update);
 		FB.Event.subscribe("auth.logout", LoginControls.update);
+		$("a#logout").click(LoginControls.logout);
 		LoginControls.update();
 	},
 	
 	update: function() {
-		console.log("LoginControls.update");
 		if(FB.getSession() == null) {
 			$("div.loggedInControls").css("display", "none");
 			$("div.loggedOutControls").css("display", "block");
@@ -19,6 +19,7 @@ var LoginControls = {
 	
 	logout: function() {
 		FB.logout();
+		return false;
 	}
 	
 };
@@ -32,10 +33,12 @@ var Modal = {
 		var modal = $.modal($("#" + id));
 		if(modal !== false) Modal.current = modal; 
 		$("#simplemodal-overlay").click(Modal.hide);
+		return false;
 	},
 	
 	hide: function() {
 		Modal.current.close();
+		return false;
 	}
 	
 };
