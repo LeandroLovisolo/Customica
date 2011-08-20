@@ -63,34 +63,32 @@
 				<h4 class="half-bottom">Remera de mujer</h4>
 			</li>
 		</ul>	
-				
-		<div class="sizePicker six columns alpha"></div>
-		<a href="javascript:Modal.show('sizesModal')" class="two columns omega right">Medidas acá</a>	
 		
-		<br class="clear"/>
-		<div class="row"></div>
-		<div class="row"></div>
-		<div class="row"></div>		
-		
-		<h3 class="three columns row alpha center">$${models.TShirt.PRICE}</h3>
-		<div class="five columns row omega">
-			<div class="chooseSize">ELEGÍ UN TALLE</div>
-			<a href="#" onclick="$('#form').submit(); return false" class="buy">¡Comprar!</a>
+		<div>
+			<div class="sizePicker six columns alpha"></div>
+			<a href="javascript:Modal.show('sizesModal')" class="two columns omega right">Medidas acá</a>
+			<div class="clearfix"></div>
 		</div>
-		
-		<form action="@{Application.buyButton}" method="get" id="form">
-			<input type="hidden" name="id" value="${tShirt.id}"/>
-			<input type="hidden" id="genderField" name="gender" value="MALE"/>
-			<select id="sizeField" name="size" style="display: none">
-				#{list items:models.TShirt.Size.values(), as:'size'}
-					<option value="${size.name()}">${size}</option>
-				#{/list}
-			</select>
-		</form>
-		
-		<div class="row"></div>
-		<div class="row"></div>
-		<div class="row"></div>
+
+		<div>		
+			<h3 class="three columns row alpha center">$${models.TShirt.PRICE}</h3>
+			<div class="five columns row omega">
+				<div class="chooseSize">ELEGÍ UN TALLE</div>
+				<a href="#" onclick="$('#form').submit(); return false" class="buy">¡Comprar!</a>
+			</div>
+			
+			<form action="@{Application.buyButton}" method="get" id="form">
+				<input type="hidden" name="id" value="${tShirt.id}"/>
+				<input type="hidden" id="genderField" name="gender" value="MALE"/>
+				<select id="sizeField" name="size" style="display: none">
+					#{list items:models.TShirt.Size.values(), as:'size'}
+						<option value="${size.name()}">${size}</option>
+					#{/list}
+				</select>
+			</form>
+			
+			<div class="clearfix"></div>
+		</div>
 		
 		<h4 class="half-bottom">Decí algo lindo</h4>
 		<fb:comments numposts="30" width="460" xid="T${tShirt.id}"></fb:comments>
