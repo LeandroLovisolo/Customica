@@ -10,6 +10,21 @@
 	<meta name="description" content="Custómica es el sitio donde podés diseñar tu propia remera y comprar remeras diseñadas por gente como vos.">
 	<meta name="author" content="">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+	
+	#{if ogTitle != null}
+		<meta property="og:title" content="${ogTitle}" />
+	#{/if}
+	#{if ogUrl != null}
+		<meta property="og:url" content="${ogUrl}" />
+	#{/if}
+	#{if ogImage != null}
+		<meta property="og:image" content="${ogImage}" />
+	#{/if}
+	
+	<meta property="og:type" content="website" />
+	<meta property="og:site_name" content="Custómica" />
+	<meta property="fb:app_id" content="109218475776229" />
+	
 	 
 	<!--[if lt IE 9]> <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script> <![endif]-->
 	<link rel="shortcut icon" href="/images/favicon.ico">

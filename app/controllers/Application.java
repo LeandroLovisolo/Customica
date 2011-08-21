@@ -1,5 +1,8 @@
 package controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import models.Category;
 import models.Order;
 import models.TShirt;
@@ -9,6 +12,8 @@ import models.dineromail.DineroMailHttpPost;
 import models.dineromail.DineroMailHttpPostFactory;
 import play.data.validation.Valid;
 import play.mvc.Controller;
+import play.mvc.Http;
+import play.mvc.Http.Request;
 import play.mvc.Router;
 
 public class Application extends Controller {
@@ -32,6 +37,14 @@ public class Application extends Controller {
     public static void tshirt(Long id) {
     	TShirt tShirt = TShirt.findById(id);
     	if(tShirt == null) Application.index();
+    	
+    	// Open Graph tags
+    	renderArgs.put("ogTitle", tShirt.title);
+    	Map<String, Object> params = new HashMap<String, Object>();
+    	params.put("id", tShirt.id);
+    	renderArgs.put("ogUrl", Router.getFullUrl("Application.tshirt", params));
+    	renderArgs.put("ogImage", request.getBase() + tShirt.getDesignUrl());
+    	
     	renderArgs.put("tShirt", tShirt);
     	renderArgs.put("moreTShirtsInCategory", tShirt.category.getTop4TShirts());
     	render();
