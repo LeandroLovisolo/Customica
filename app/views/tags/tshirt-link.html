@@ -1,11 +1,11 @@
 %{ if(_showAuthor == null) _showAuthor = true }%
 
 <div class="${_columns} columns ${_containerClass} tshirt-link">
-	<a href="@{Application.tshirt(_tShirt.id)}">
+	<a href="@{Application.tshirt(_tShirt.id, _tShirt.title.slugify())}">
 		<img src="${_tShirt.getThumbnailUrl()}" class="${_columns} columns alpha omega"/>
 	</a>
 	<span class="${_columns} columns alpha omega">
-		<h5><a href="@{Application.tshirt(_tShirt.id)}">${_tShirt.title}</a></h5>
+		<h5><a href="@{Application.tshirt(_tShirt.id, _tShirt.title.slugify())}">${_tShirt.title}</a></h5>
 		
 		#{if _showAuthor}
 			<div class="author">

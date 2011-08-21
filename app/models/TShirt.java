@@ -13,6 +13,7 @@ import play.Play;
 import play.db.jpa.Model;
 import play.mvc.Http;
 import play.mvc.Router;
+import play.templates.JavaExtensions;
 
 @Entity
 public class TShirt extends Model {
@@ -80,6 +81,7 @@ public class TShirt extends Model {
 	private static void shareOnFacebook(TShirt tShirt) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		params.put("id", tShirt.id);
+		params.put("slug", JavaExtensions.slugify(tShirt.title));
 		FacebookService.get().postToWall(
 				"",
 				Http.Request.current().getBase() + tShirt.getThumbnailUrl(),

@@ -15,6 +15,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Http.Request;
 import play.mvc.Router;
+import play.templates.JavaExtensions;
 
 public class Application extends Controller {
 
@@ -34,7 +35,7 @@ public class Application extends Controller {
     	render();
     }
     
-    public static void tshirt(Long id) {
+    public static void tshirt(Long id, String slug) {
     	TShirt tShirt = TShirt.findById(id);
     	if(tShirt == null) Application.index();
     	
@@ -42,6 +43,7 @@ public class Application extends Controller {
     	renderArgs.put("ogTitle", tShirt.title);
     	Map<String, Object> params = new HashMap<String, Object>();
     	params.put("id", tShirt.id);
+    	params.put("slug", JavaExtensions.slugify(tShirt.title));
     	renderArgs.put("ogUrl", Router.getFullUrl("Application.tshirt", params));
     	renderArgs.put("ogImage", request.getBase() + tShirt.getDesignUrl());
     	
@@ -128,7 +130,7 @@ public class Application extends Controller {
     		tShirt.update(title, categoryId, xml.getBytes());
     	}
     	
-    	tshirt(tShirt.id);
+    	tshirt(tShirt.id, JavaExtensions.slugify(tShirt.title));
     }
     
     public static void deleteTShirt(Long id) {

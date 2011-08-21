@@ -6,6 +6,7 @@ GET     /                                       Application.index
 GET     /remeras/{id}/{slug}                    Application.category
 GET     /remeras/{id}                           Application.category
 GET     /remeras                                Application.category
+GET     /remera/{id}/{slug}                     Application.tshirt
 GET     /remera/{id}                            Application.tshirt
 GET     /comprar/remera-{id}/{gender}/{size}    Application.order
 POST    /comprar                                Application.submitOrder
