@@ -26,7 +26,7 @@ public class Application extends Controller {
     	render();
     }
     
-    public static void category(Long id) {
+    public static void category(Long id, String slug) {
     	Category category = (Category) (id == null ? null : Category.findById(id));
     	renderArgs.put("categories", Category.findAll());
     	renderArgs.put("category", category);

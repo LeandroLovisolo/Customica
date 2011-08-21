@@ -27,7 +27,7 @@
 		
 		<div class="row"></div>
 		
-		<h4 class="row">Más remeras en <a href="@{Application.category(tShirt.category.id)}">${tShirt.category.name}</a></h4>
+		<h4 class="row">Más remeras en <a href="@{Application.category(tShirt.category.id, tShirt.category.name.slugify())}">${tShirt.category.name}</a></h4>
 		
 		#{list items:moreTShirtsInCategory, as:'aTShirt'}
 			%{

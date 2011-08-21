@@ -35,7 +35,7 @@
 		
 		#{list items:categories, as:'category'}
 			<h4 class="ten columns row alpha">${category.name}</h4>
-			<a href="@{Application.category(category.id)}" class="two columns row omega seeMore">Ver más &raquo;</a>	
+			<a href="@{Application.category(category.id, category.name.slugify())}" class="two columns row omega seeMore">Ver más &raquo;</a>	
 			<div class="row">
 				%{ i = 0 %}
 				#{list items:category.getTop4TShirts(), as:'tShirt'}

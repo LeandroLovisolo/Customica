@@ -15,7 +15,7 @@
 			</li>
 			#{list items:categories, as:'aCategory'}
 				<li>
-					<a href="@{Application.category(aCategory.id)}"
+					<a href="@{Application.category(aCategory.id, aCategory.name.slugify())}"
 							class="${category != null && aCategory == category ? 'current' : ''}">
 						${aCategory.name}
 					</a>
