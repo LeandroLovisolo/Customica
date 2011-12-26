@@ -8,13 +8,15 @@ var LoginControls = {
 	},
 	
 	update: function() {
-		if(FB.getSession() == null) {
-			$("div.loggedInControls").css("display", "none");
-			$("div.loggedOutControls").css("display", "block");
-		} else {
-			$("div.loggedInControls").css("display", "block");
-			$("div.loggedOutControls").css("display", "none");
-		}
+		FB.getLoginStatus(function(response) {
+			if (response.status === 'connected') {
+				$("div.loggedInControls").css("display", "block");
+				$("div.loggedOutControls").css("display", "none");
+			} else {
+				$("div.loggedInControls").css("display", "none");
+				$("div.loggedOutControls").css("display", "block");
+			}
+		});
 	},
 	
 	logout: function() {

@@ -23,7 +23,7 @@
 		
 		$("div.errorbox").css("display", "none");
 		
-		if(FB.getSession() == null) {
+		if(FB.getAuthResponse() == null) {
 			FB.login(function(response) {
 				if(response.session != null) {
 					$("form").submit();

@@ -1,15 +1,10 @@
 package models;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import play.Logger;
-import play.libs.Codec;
+import play.Play;
+import play.libs.WS;
 import play.mvc.Http;
 
 import com.restfb.DefaultFacebookClient;
@@ -21,32 +16,9 @@ import com.restfb.types.FacebookType;
 
 public class FacebookService {
 	
-	public static final String API_KEY = "b382872fb2c9602a341100ef74a19e2c";
+	public static final String API_KEY = "109218475776229"; //"b382872fb2c9602a341100ef74a19e2c";
 	public static final String SECRET_KEY = "68651df886984c0dfeed75f74873f24e";
-	public static final String COOKIE_NAME = "fbs_" + API_KEY;
-	
-	public enum CookieProperties {
-		
-		USER_ID("uid"),
-		EXPIRES("expires"),
-		SECRET("secret"),
-		BASE_DOMAIN("base_domain"),
-		SESSION_KEY("session_key"),
-		ACCESS_TOKEN("access_token"),
-		SIGNATURE("sig");
-		
-		public String propertyName;
-		
-		private CookieProperties(String name) {
-			this.propertyName = name;
-		}
-		
-		@Override
-		public String toString() {
-			return propertyName;
-		}
-		
-	}
+	public static final String COOKIE_NAME = "fbsr_" + API_KEY;
 	
 	private static FacebookService instance;
 
@@ -58,34 +30,49 @@ public class FacebookService {
 	private FacebookService() {
 	}
 	
-	public Long getLoggedInUserId() {
-		if(isSignatureValid()) {
-			return Long.valueOf(getCookieProperty(CookieProperties.USER_ID));
+	private String getCookie() {
+		if(Http.Request.current().cookies == null) {
+			return null;
 		} else {
+			for(String name : Http.Request.current().cookies.keySet()) {
+				if(name.equals(COOKIE_NAME)) return Http.Request.current().cookies.get(name).value;
+			}
 			return null;
 		}
 	}
 	
-	private boolean isSignatureValid() {
-		Map<String, String> cookieProperties = getCookieProperties();
-		if(cookieProperties == null) {
-			return false;
-		} else {
-			String payload = "";
-			List<String> propertyNames = new ArrayList<String>(cookieProperties.keySet());
-			Collections.sort(propertyNames);
-			for(String propertyName : propertyNames) {
-				if(!propertyName.equals(CookieProperties.SIGNATURE.propertyName)) {
-					payload += propertyName + "=" + getCookieProperty(propertyName);
-				}
+	private FacebookCookie getValidatedFacebookCookie() {
+		FacebookCookie cookie = new FacebookCookie(getCookie());
+		if(!cookie.validate(SECRET_KEY)) return null;
+		return cookie;
+	}
+	
+	public Long getLoggedInUserId() {
+		FacebookCookie cookie = getValidatedFacebookCookie();
+		return cookie == null ? null : cookie.getUserId();
+	}
+	
+	private String getAccessToken() {
+		FacebookCookie cookie = getValidatedFacebookCookie();
+		if(cookie == null) return null;
+		WS.HttpResponse response = WS.url("https://graph.facebook.com/oauth/access_token?"
+                + "client_id=" + API_KEY
+                + "&redirect_uri="
+                + "&client_secret=" + SECRET_KEY
+                + "&code=" + cookie.getCode()).get();
+		
+		for(String parameter : response.getString().split("&")) {
+			String pair[] = parameter.split("=");
+			if(pair.length > 1 && "access_token".equals(pair[0])) {
+				return pair[1];
 			}
-			payload += SECRET_KEY;
-			return getCookieProperty(CookieProperties.SIGNATURE).equals(Codec.hexMD5(payload));
 		}
+		
+		return null;
 	}
 	
 	private FacebookClient getFacebookClient() {
-		return new DefaultFacebookClient(getCookieProperty(CookieProperties.ACCESS_TOKEN));
+		return new DefaultFacebookClient(getAccessToken());
 	}
 
 	public String getUserEmail() throws FacebookException {
@@ -132,44 +119,6 @@ public class FacebookService {
 			throw new RuntimeException(e);
 		}
 		return results.get(0).publishStream == 1;
-	}
-	
-	private String getCookieProperty(CookieProperties cookieProperty) {
-		return getCookieProperty(cookieProperty.propertyName);
-	}
-	
-	private String getCookieProperty(String property) {
-		return getCookieProperties().get(property);
-	}
-	
-	private Map<String, String> getCookieProperties() {
-		Map<String, String> map = new HashMap<String, String>();
-		try {
-			for(String keyValue : getCookie().split("&")) {
-				String keyValueArray[] = keyValue.split("=");
-				try {
-					map.put(URLDecoder.decode(keyValueArray[0], "utf-8"), URLDecoder.decode(keyValueArray[1], "utf-8"));
-				} catch(IndexOutOfBoundsException e) {
-					return null;
-				} catch(UnsupportedEncodingException e) {
-					return null;
-				}
-			}
-		} catch(NullPointerException e) {
-			return null;
-		}
-		return map;
-	}	
-	
-	private String getCookie() {
-		if(Http.Request.current().cookies == null) {
-			return null;
-		} else {
-			for(String name : Http.Request.current().cookies.keySet()) {
-				if(name.equals(COOKIE_NAME)) return Http.Request.current().cookies.get(name).value;
-			}
-			return null;
-		}
 	}
 	
 }

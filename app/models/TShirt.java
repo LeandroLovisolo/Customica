@@ -53,7 +53,7 @@ public class TShirt extends Model {
 	public Date created;
 	public String title;
 	
-    @Column(columnDefinition="LONGBLOB") 
+    //@Column(columnDefinition="LONGBLOB") 
 	public byte[] xml;
 	
 	@ManyToOne
