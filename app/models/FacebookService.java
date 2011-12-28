@@ -16,9 +16,9 @@ import com.restfb.types.FacebookType;
 
 public class FacebookService {
 	
-	public static final String API_KEY = "109218475776229"; //"b382872fb2c9602a341100ef74a19e2c";
-	public static final String SECRET_KEY = "68651df886984c0dfeed75f74873f24e";
-	public static final String COOKIE_NAME = "fbsr_" + API_KEY;
+	public static final String APP_ID = Play.configuration.getProperty("facebook.id");
+	public static final String APP_SECRET = Play.configuration.getProperty("facebook.secret");
+	public static final String COOKIE_NAME = "fbsr_" + APP_ID;
 	
 	private static FacebookService instance;
 
@@ -43,7 +43,7 @@ public class FacebookService {
 	
 	private FacebookCookie getValidatedFacebookCookie() {
 		FacebookCookie cookie = new FacebookCookie(getCookie());
-		if(!cookie.validate(SECRET_KEY)) return null;
+		if(!cookie.validate(APP_SECRET)) return null;
 		return cookie;
 	}
 	
@@ -56,9 +56,9 @@ public class FacebookService {
 		FacebookCookie cookie = getValidatedFacebookCookie();
 		if(cookie == null) return null;
 		WS.HttpResponse response = WS.url("https://graph.facebook.com/oauth/access_token?"
-                + "client_id=" + API_KEY
+                + "client_id=" + APP_ID
                 + "&redirect_uri="
-                + "&client_secret=" + SECRET_KEY
+                + "&client_secret=" + APP_SECRET
                 + "&code=" + cookie.getCode()).get();
 		
 		for(String parameter : response.getString().split("&")) {

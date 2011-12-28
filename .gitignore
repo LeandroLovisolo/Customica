@@ -5,3 +5,5 @@
 /.project
 /.settings
 /crud
+
+conf/local.conf
