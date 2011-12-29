@@ -6,30 +6,45 @@ Custómica was an online t-shirt store for the Argentinian market where anyone c
 
 It failed to gain any significant traction, so I'm releasing its source code. The application is still running in read-only mode on a free Heroku dyno. You can check it out [here](http://customica.com).
 
+Custómica was written entirely by myself, from the database persistence code up to the user interface.
+
+### About the code ###
+
+Custómica is composed of two major components:
+
+* A [Play](http://www.playframework.org/) application written in Java.
+* A tshirt designer component written in Flex.
+
+The tshirt designer produces an XML description of the design that is stored in the database and used by the Java code to generate PNG images of the designs used in the rest of the application. The designer is also able to read the XML description of an existing design, so that users can modify their tshirt designs.
+
+I started developing Custómica using a different stack (for the curious, it was based on [Wicket](http://wicket.apache.org/) and [Guice](http://code.google.com/p/google-guice/)). At some point in mid-2011, I decided to gradually migrate to the current stack. Unfortunately I never completed the migration. There's a lot of code from the old stack that never made it to the current version, mainly a test suite for the tshirt design rendering code and a bunch of admin screens.
+
+Custómica is no longer being actively developed. The last code changes were the modifications needed to make the app run on Heroku, specifically a quick and dirty read-only config switch to prevent the app from writing to the filesystem.
+
 ## Requirements ##
 
 ### Play framework ###
 
-Custómica is a [Play](http://www.playframework.org/) application written in Java. You need to [download](http://www.playframework.org/download) Play version **1.2.4** in order to run the app.
+You need to download [Play](http://www.playframework.org/) version **1.2.4** in order to run the app.
 
 ### A PostgreSQL database ###
 
-Custómica is currently running on Heroku using a shared PostgreSQL database, so you need a local instance of PostgreSQL to run it on your computer.
+Custómica is currently running on Heroku using a shared PostgreSQL database, so you need a local instance of PostgreSQL to run the app from your computer.
 
-### Facebook App ID/secret ###
+### Facebook app ID/secret ###
 
-This webapp uses Facebook as its login system. For it to work you need a valid Facebook app ID/secret. You can register a new Facebook app [here](https://developers.facebook.com/).
+Custómica uses Facebook as its login system. For it to work you need a valid Facebook app ID/secret. You can register a new Facebook app [here](https://developers.facebook.com/).
 
 ## How to run it ##
 
 You can start the app by cd-ing into the app directory and executing `play run` (assuming you've added the Play installation directory to your system PATH), but you need to define a few environment variables first:
 
-* `DATABASE_URL`: URL for your PostgreSQL database (e.g. postgres://username:password@hostname:port/database)
-* `FACEBOOK_ID`: Your Facebook app ID
-* `FACEBOOK_SECRET`: Your Facebook app secret
-* `ADMIN_USER`: Your desired username for the administrative dashboard (details below)
-* `ADMIN_PASS`: Password for the administrative dashboard
-* `READ_ONLY`: Whether the app is running in read-only mode or not. Possible values: true, false
+* `DATABASE_URL`: URL for your PostgreSQL database (e.g. postgres://username:password@hostname:port/database.)
+* `FACEBOOK_ID`: Your Facebook app ID.
+* `FACEBOOK_SECRET`: Your Facebook app secret.
+* `ADMIN_USER`: Your desired username for the administrative dashboard (details below.)
+* `ADMIN_PASS`: Password for the administrative dashboard.
+* `READ_ONLY`: Whether the app is running in read-only mode or not. Possible values: true, false.
 
 You can easily do this in one line:
 
@@ -49,7 +64,7 @@ Note that you need to run the app from the same domain that you've specified whe
 
 You can log into the administrative dashboard by going to `<your app url>/admin` and entering the username/password combo that you've specified in the `ADMIN_USER` and `ADMIN_PASS` environment variables.
 
-From the administrative dashboard you can create tshirt categories, edit/remove tshirts created by the users and review your orders.
+From the administrative dashboard you can create tshirt categories, edit/remove tshirts created by the users and review your orders and regenerate the tshirt pictures from the designs stored in the database.
 
 ### Default tshirt category ###
 
