@@ -1,12 +1,12 @@
 package controllers.admin;
 
+import play.Play;
+
 public class Security extends controllers.Secure.Security {
 	
-	public static final String USERNAME = "leandro";
-	public static final String PASSWORD = "tomahawk2007boreal";
-	
     static boolean authenticate(String username, String password) {
-        return USERNAME.equals(username) && PASSWORD.equals(password);
+        return Play.configuration.getProperty("admin.user").equals(username) &&
+               Play.configuration.getProperty("admin.pass").equals(password);
     }
     
 }
