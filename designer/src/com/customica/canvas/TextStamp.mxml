@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<canvas:Stamp xmlns="com.customica.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="102" height="32" initialize="onInitialize()" xmlns:canvas="com.customica.canvas.*">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ResizeEvent;
+			import mx.controls.Label;
+			
+			public static const FONT_SIZE:int = 48;
+			
+			private function onInitialize(): void {
+				stampLabel.setStyle("fontSize", FONT_SIZE);
+			}
+			
+			private function get stampLabel(): Label {
+				return Label(stampComponent);
+			}
+
+			public function get text(): String {
+				return stampLabel.text;
+			}
+
+			[Bindable]
+			public function set text(text:String): void {
+				stampLabel.text = text;
+				center();
+			}
+
+			private var _color:uint;
+
+			//[Bindable]
+			public function get color(): uint {
+				return _color;
+			}
+			
+			public function set color(color:uint): void {
+				stampLabel.setStyle("color", color);
+				_color = color;
+			}
+			
+			private var _font:Object;
+			
+			[Bindable]
+			public function get font(): Object {
+				return _font;
+			}
+			
+			public function set font(font:Object): void {
+				_font = font;
+				stampLabel.setStyle("fontFamily", font);
+				stampLabel.setStyle("fontWeight", font.indexOf("Bold") == -1 ? "normal" : "bold");
+				center();				
+			}
+			
+			private function center(): void {
+				if(hasCreationCompleted()) {
+					stampLabel.addEventListener(ResizeEvent.RESIZE, onResize);
+				}				
+			} 
+			
+			private function onResize(event:Event): void {
+				stampLabel.removeEventListener(ResizeEvent.RESIZE, onResize);
+				var oldRectangle:Rectangle = getRectangle();
+				var oldCenter:Point = new Point(oldRectangle.x + oldRectangle.width / 2, oldRectangle.y + oldRectangle.height / 2);
+				updateGeometryNow();
+				var newRectangle:Rectangle = getRectangle();
+				var newCenter:Point = new Point(newRectangle.x + newRectangle.width / 2, newRectangle.y + newRectangle.height / 2);
+				stampComponent.x -= newCenter.x - oldCenter.x;
+				stampComponent.y -= newCenter.y - oldCenter.y;
+				updateGeometryNow();
+			}
+		]]>
+	</mx:Script>
+	<canvas:stampComponent>
+		<mx:Label styleName="textStamp" truncateToFit="false" />
+	</canvas:stampComponent>
+</canvas:Stamp>

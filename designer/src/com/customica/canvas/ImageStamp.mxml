@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<canvas:Stamp xmlns="com.customica.*" xmlns:mx="http://www.adobe.com/2006/mxml" width="102" height="32" xmlns:canvas="com.customica.canvas.*">
+	<mx:Script>
+		<![CDATA[
+			import com.customica.Designer;
+			private var byteArray:ByteArray;
+			private var bitmap:Bitmap;
+			
+			public function get image(): ByteArray {
+				return byteArray;
+			}
+		
+			public function set image(byteArray:ByteArray): void {
+				this.byteArray = byteArray;
+				var loader:Loader = new Loader();
+				loader.loadBytes(byteArray);
+				loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function(event:Event): void {
+					bitmap = Bitmap(loader.content);
+					bitmap.smoothing = true;
+					imageComponent.source = bitmap;
+					applySizeConstraints(bitmap.width, bitmap.height);
+					updateGeometry();
+				});
+			}
+			
+			public function getBitmap(): Bitmap {
+				return bitmap;
+			}
+			
+			override protected function getMaxWidth(): int {
+				if(bitmap == null) {
+					return super.getMaxWidth();
+				} else {
+					return bitmap.width * (Designer.ON_SCREEN_DESIGN_WIDTH / Designer.FULL_SIZE_DESIGN_WIDTH);
+				}
+			}
+			
+			override protected function getMaxHeight(): int {
+				if(bitmap == null) {
+					return super.getMaxHeight();
+				} else {
+					return bitmap.height * (Designer.ON_SCREEN_DESIGN_HEIGHT / Designer.FULL_SIZE_DESIGN_HEIGHT);
+				}
+			}
+			
+		]]>
+	</mx:Script>
+	<canvas:stampComponent>
+		<mx:Image id="imageComponent"/>
+	</canvas:stampComponent>
+</canvas:Stamp>

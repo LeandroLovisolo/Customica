@@ -1,0 +1,446 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="630" height="700" backgroundGradientAlphas="[1.0, 1.0]" backgroundGradientColors="[#FFFFFF, #FFFFFF]" backgroundColor="#FFFFFF" xmlns:customica="com.customica.*"
+		initialize="onInitialize()" creationComplete="onCreationComplete()" preloader="com.customica.Preloader">
+	<mx:Script>
+		<![CDATA[
+			import com.customica.fonts.FontLibrary;
+			import com.customica.canvas.ImageStamp;
+			import com.customica.canvas.Stamp;
+			import com.customica.canvas.TShirtColor;
+			import com.customica.canvas.TextStamp;
+			
+			import mx.binding.utils.BindingUtils;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.collections.ArrayCollection;
+			import mx.containers.Form;
+			import mx.controls.Alert;
+			import mx.controls.Label;
+			import mx.controls.Text;
+			import mx.graphics.codec.PNGEncoder;
+			import mx.logging.Log;
+			import mx.utils.Base64Decoder;
+			import mx.utils.Base64Encoder;
+
+			private static const CANVAS_MARGIN_TOP:int = 100;
+			private static const CANVAS_MARGIN_LEFT_RIGHT_BOTTOM:int = 25;
+			private static const TSHIRT_IMAGE_MARGIN_TOP:int = 10;
+			private static const TSHIRT_IMAGE_WIDTH:int = 550;
+			private static const TSHIRT_IMAGE_HEIGHT:int = 538;			
+			private static const DESIGN_CANVAS_MARGIN_TOP:int = 90;
+			private static const BORDER_CANVAS_MARGIN:int = 10;
+			
+			// Printed design size in millimeters (A4 sheet) 
+			private static const DESIGN_WIDTH_MM:int = 210;
+			private static const DESIGN_HEIGHT_MM:int = 297;
+			
+			// A4 image size in pixels, 300 DPI
+			public static const FULL_SIZE_DESIGN_WIDTH:int = 2480;
+			public static const FULL_SIZE_DESIGN_HEIGHT:int = 3508;
+			
+			public static const ON_SCREEN_DESIGN_WIDTH:int = 250;
+			public static const ON_SCREEN_DESIGN_HEIGHT:int = Math.round(ON_SCREEN_DESIGN_WIDTH * FULL_SIZE_DESIGN_HEIGHT / FULL_SIZE_DESIGN_WIDTH);
+
+			private static const LOAD_JS_CALLBACK:String = "load";
+			private static const SAVE_JS_CALLBACK:String = "save";
+			private static const GET_FULL_SIZE_DESIGN_JS_CALLBACK:String = "getFullSizeDesign";
+			private static const ON_CREATION_COMPLETE_JS_CALL:String = "onDesignerInitialized";
+			
+			private static const STATE_STAMP_SELECTED:String = "stampSelected";
+			private static const STATE_EDITING_TEXT_STAMP:String = "editingTextStamp";
+
+			[Embed(source="../images/tshirt-black.png")]
+			private var blackTShirtImage:Class;
+			
+			[Embed(source="../images/tshirt-black-icon.png")]
+			private var blackTShirtImageIcon:Class;
+			
+			[Embed(source="../images/tshirt-white.png")]
+			private var whiteTShirtImage:Class;
+			
+			[Embed(source="../images/tshirt-white-icon.png")]
+			private var whiteTShirtImageIcon:Class;
+			
+			[Embed(source="../images/tshirt-yellow.png")]
+			private var yellowTShirtImage:Class;
+			
+			[Embed(source="../images/tshirt-yellow-icon.png")]
+			private var yellowTShirtImageIcon:Class;
+			
+			[Embed(source="../images/tshirt-red.png")]
+			private var redTShirtImage:Class;
+			
+			[Embed(source="../images/tshirt-red-icon.png")]
+			private var redTShirtImageIcon:Class;
+			
+			[Embed(source="../images/tshirt-green.png")]
+			private var greenTShirtImage:Class;
+			
+			[Embed(source="../images/tshirt-green-icon.png")]
+			private var greenTShirtImageIcon:Class;
+			
+			[Embed(source="../images/tshirt-blue.png")]
+			private var blueTShirtImage:Class;
+			
+			[Embed(source="../images/tshirt-blue-icon.png")]
+			private var blueTShirtImageIcon:Class;
+			
+			//////////////////////////////////////////////////////////
+			/////////////// INITIALIZATION AND GLOBALS ///////////////
+			//////////////////////////////////////////////////////////
+			
+			private function onInitialize(): void {
+				addExternalInterfaceCallbacks();
+				onTShirtComboBoxInitialize();
+				setDefaultTShirtColor();
+				calculateDesignCanvasGeometry();
+			}
+			
+			[Bindable]
+			private var fonts:Array = FontLibrary.fonts;
+			
+			private function addExternalInterfaceCallbacks(): void {
+				ExternalInterface.addCallback(LOAD_JS_CALLBACK, load);
+				ExternalInterface.addCallback(SAVE_JS_CALLBACK, save);
+				ExternalInterface.addCallback(GET_FULL_SIZE_DESIGN_JS_CALLBACK, getFullSizeDesign);				
+			}
+			
+			private function setDefaultTShirtColor(): void {
+				setTShirtColor(defaultTShirtColor);
+			}
+			
+			private function onCreationComplete(): void {
+				ExternalInterface.call(ON_CREATION_COMPLETE_JS_CALL);
+			}
+			
+			private function calculateDesignCanvasGeometry(): void {
+				canvas.x = CANVAS_MARGIN_LEFT_RIGHT_BOTTOM;
+				canvas.y = CANVAS_MARGIN_TOP;
+				canvas.width = this.width - CANVAS_MARGIN_LEFT_RIGHT_BOTTOM * 2;
+				canvas.height = this.height - CANVAS_MARGIN_TOP - CANVAS_MARGIN_LEFT_RIGHT_BOTTOM;
+				tShirtImage.x = (canvas.width - TSHIRT_IMAGE_WIDTH) / 2
+				tShirtImage.y = TSHIRT_IMAGE_MARGIN_TOP;
+				tShirtImage.width = TSHIRT_IMAGE_WIDTH;
+				tShirtImage.height = TSHIRT_IMAGE_HEIGHT;
+				designCanvas.x = (canvas.width - ON_SCREEN_DESIGN_WIDTH - BORDER_CANVAS_MARGIN * 2) / 2
+				designCanvas.y = DESIGN_CANVAS_MARGIN_TOP;
+				designCanvas.width = ON_SCREEN_DESIGN_WIDTH + BORDER_CANVAS_MARGIN * 2;
+				designCanvas.height = ON_SCREEN_DESIGN_HEIGHT + BORDER_CANVAS_MARGIN * 2;
+			}
+			
+			private function onStampSelectedEnterState(): void {
+				borderCanvas.x = BORDER_CANVAS_MARGIN;
+				borderCanvas.y = BORDER_CANVAS_MARGIN;
+				borderCanvas.width = designCanvas.width - BORDER_CANVAS_MARGIN * 2;
+				borderCanvas.height = designCanvas.height - BORDER_CANVAS_MARGIN * 2;
+			}
+			
+			/////////////////////////////////////////////////
+			/////////////// UI EVENT HANDLERS ///////////////
+			/////////////////////////////////////////////////
+			
+			private var tShirtColors:Array = new Array();
+			private var defaultTShirtColor:TShirtColor;
+			private var tShirtColor:TShirtColor;
+			
+			private function onTShirtComboBoxInitialize(): void {
+				tShirtColors.push(new TShirtColor("Negro", "black", blackTShirtImage, blackTShirtImageIcon));
+				tShirtColors.push(defaultTShirtColor = new TShirtColor("Blanco", "white", whiteTShirtImage, whiteTShirtImageIcon));
+				tShirtColors.push(new TShirtColor("Amarillo", "yellow", yellowTShirtImage, yellowTShirtImageIcon));
+				tShirtColors.push(new TShirtColor("Rojo", "red", redTShirtImage, redTShirtImageIcon));
+				tShirtColors.push(new TShirtColor("Verde", "green", greenTShirtImage, greenTShirtImageIcon));
+				tShirtColors.push(new TShirtColor("Azul", "blue", blueTShirtImage, blueTShirtImageIcon));
+			}			
+			
+			private function onAddImageStamp(): void {
+				var fileReference:FileReference = new FileReference();
+				fileReference.addEventListener(Event.SELECT, function(): void {
+					fileReference.load();
+				});
+				fileReference.addEventListener(Event.COMPLETE, function(): void {
+					var stamp:ImageStamp = new ImageStamp();
+					stamp.image = fileReference.data;
+					addStamp(stamp);				
+				});
+                fileReference.browse([new FileFilter("Images", ".gif;*.jpeg;*.jpg;*.png")]);
+			}
+			
+			private function onAddTextStamp(): void {
+				var stamp:TextStamp = new TextStamp();
+				addStamp(stamp);
+				stamp.text = "Tu mensaje";
+				stamp.color = 0x000000;
+				stamp.font = fonts[0];
+			}			
+			
+			private function onTShirtClick(event:MouseEvent): void {
+				clearStampSelection();
+			}			
+			
+			///////////////////////////////////////////////////
+			/////////////// DESIGN MODIFICATION ///////////////
+			///////////////////////////////////////////////////
+			
+			private function setTShirtColor(tShirtColor:TShirtColor, updateComboBox:Boolean = true): void {
+				this.tShirtColor = tShirtColor;
+				if(tShirtImage != null) tShirtImage.source = tShirtColor.image;
+				//if(updateComboBox) tShirtColorComboBox.selectedItem = tShirtColor;
+			}			
+			
+			private function addStamp(stamp:Stamp, useDefaultPosition:Boolean = true): void {
+				designCanvas.addChild(stamp);
+				if(useDefaultPosition) {
+					stamp.x = (designCanvas.width - stamp.width) / 2
+					stamp.y = 30;
+				}
+				stamp.stampComponent.addEventListener(MouseEvent.MOUSE_DOWN, function(): void {
+					if(stamp.parent != null) selectStamp(stamp);
+				});
+				stamp.addEventListener(Event.REMOVED_FROM_STAGE, function(event:Event): void {
+					clearStampSelection();
+				});
+				selectStamp(stamp);
+			}
+			
+			private function clearDesign(): void {
+				clearStampSelection();
+				var i:int = 0;
+				while(i < designCanvas.numChildren) {
+					if(designCanvas.getChildAt(i) is Stamp) designCanvas.removeChildAt(i);
+					else i++;
+				}
+			}
+			
+			/////////////////////////////////////////////////
+			/////////////// SELECTION SUPPORT ///////////////
+			/////////////////////////////////////////////////			
+			
+			private var watchers:Array = new Array();
+			
+			private function selectStamp(stamp:Stamp): void {
+				if(stamp.isSelected()) return;
+				watchers.forEach(function(watcher:ChangeWatcher, index:int, array:Array): void {
+					watcher.unwatch();
+				});
+				watchers = new Array();
+				for(var i:Number = 0; i < designCanvas.numChildren; i++) {
+					if(designCanvas.getChildAt(i) is Stamp) {
+						Stamp(designCanvas.getChildAt(i)).deselect();
+					}
+				}
+				if(stamp is TextStamp) {
+					currentState = STATE_EDITING_TEXT_STAMP;
+					var textStamp:TextStamp = TextStamp(stamp);
+					watchers.push(BindingUtils.bindProperty(textInput, "text", textStamp, "text"));
+					watchers.push(BindingUtils.bindProperty(textStamp, "text", textInput, "text"));
+					watchers.push(BindingUtils.bindProperty(colorPicker, "selectedColor", textStamp, "color"));
+					watchers.push(BindingUtils.bindProperty(textStamp, "color", colorPicker, "selectedColor"));
+					watchers.push(BindingUtils.bindProperty(fontComboBox, "data", textStamp, "font"));
+					watchers.push(BindingUtils.bindProperty(textStamp, "font", fontComboBox, "selectedItem"));
+				} else {
+					currentState = STATE_STAMP_SELECTED;
+				}
+				stamp.select();
+			}
+			
+			private function clearStampSelection(): void {
+				for(var i:Number = 0; i < designCanvas.numChildren; i++) {
+					if(designCanvas.getChildAt(i) is Stamp) {
+						Stamp(designCanvas.getChildAt(i)).deselect();
+					}
+				}
+				currentState = "";				
+			}
+			
+			private function getSelectedTextStamp(): TextStamp {
+				for(var i:Number = 0; i < designCanvas.numChildren; i++) {
+					if(designCanvas.getChildAt(i) is TextStamp && TextStamp(designCanvas.getChildAt(i)).isSelected()) {
+						return TextStamp(designCanvas.getChildAt(i));
+					}
+				}
+				return null;
+			}
+			
+			/////////////////////////////////////////////////
+			/////////////// LOAD/SAVE SUPPORT ///////////////
+			/////////////////////////////////////////////////
+			
+			private function load(xmlString:String): void {
+				var design:XML = new XML(xmlString);
+				for each(var tShirtColor:TShirtColor in tShirtColors) {
+					if(tShirtColor.xmlName == design.@tShirtColor) setTShirtColor(tShirtColor);
+				}
+				clearDesign();
+				for each(var element:XML in design.elements()) {
+					var stamp:Stamp;
+					if(element.name() == "textStamp") {
+						var textStamp:TextStamp = new TextStamp();
+						stamp = textStamp;
+						textStamp.text = element.text;
+						textStamp.font = element.font.toString();
+						textStamp.color = element.color;
+					}
+					if(element.name() == "imageStamp") {
+						var imageStamp:ImageStamp = new ImageStamp();
+						stamp = imageStamp;
+						var decoder:Base64Decoder = new Base64Decoder();
+						decoder.decode(element.image);
+						imageStamp.image = decoder.toByteArray();
+					}
+					stamp.stampX = mmToPx(element.@x);
+					stamp.stampY = mmToPx(element.@y);
+					stamp.stampRotation = element.@rotation;
+					stamp.stampScale = element.@scale * ON_SCREEN_DESIGN_WIDTH / FULL_SIZE_DESIGN_WIDTH;
+					addStamp(stamp, false);
+				}
+			}
+			
+			private function save(): String {
+				var design:XML = <design version="1"></design>;
+				design.@tShirtColor = tShirtColor.xmlName;
+				for(var i:int = 0; i < designCanvas.numChildren; i++) {
+					if(designCanvas.getChildAt(i) is Stamp) {
+						var stamp:Stamp = Stamp(designCanvas.getChildAt(i));
+						var stampXml:XML;
+						if(stamp is TextStamp) {
+							var textStamp:TextStamp = TextStamp(stamp);
+							stampXml = <textStamp>
+								<text>{textStamp.text}</text>
+								<font>{textStamp.font}</font>
+								<color>{textStamp.color}</color>
+							</textStamp>;
+						}
+						if(stamp is ImageStamp) {
+							var imageStamp:ImageStamp = ImageStamp(stamp);
+							var encoder:Base64Encoder = new Base64Encoder();
+							encoder.encodeBytes(imageStamp.image);
+							stampXml = <imageStamp>
+								<image>{encoder.toString()}</image>
+							</imageStamp>;
+						}
+						stampXml.@x = pxToMm(stamp.stampX);
+						stampXml.@y = pxToMm(stamp.stampY);
+						stampXml.@rotation = stamp.stampRotation;
+						stampXml.@scale = stamp.stampScale * FULL_SIZE_DESIGN_WIDTH / ON_SCREEN_DESIGN_WIDTH;
+						design.appendChild(stampXml);
+					}
+				}
+				return design.toXMLString();
+			}
+			
+			private function pxToMm(px:int): Number {
+				return px * DESIGN_WIDTH_MM / ON_SCREEN_DESIGN_WIDTH;
+			}
+			
+			private function mmToPx(mm:Number): int {
+				return mm * ON_SCREEN_DESIGN_WIDTH / DESIGN_WIDTH_MM;
+			}
+			
+			///////////////////////////////////////////////////////////////////
+			/////////////// FULL SIZE DESIGN GENERATION SUPPORT ///////////////
+			///////////////////////////////////////////////////////////////////
+			
+			private function getFullSizeDesign(): String {
+				var bitmapData:BitmapData = new BitmapData(FULL_SIZE_DESIGN_WIDTH, FULL_SIZE_DESIGN_HEIGHT, true, 0x00000000);
+				for(var i:int = 0; i < designCanvas.numChildren; i++) {
+					if(designCanvas.getChildAt(i) is TextStamp) {
+						var textStamp:TextStamp = TextStamp(designCanvas.getChildAt(i));
+						var textField:TextField = new TextField();
+						textField.autoSize = TextFieldAutoSize.LEFT;
+						textField.embedFonts = true;
+						textField.text = textStamp.text;
+						textField.setTextFormat(new TextFormat(textStamp.font.toString(), TextStamp.FONT_SIZE, textStamp.color));
+						bitmapData.draw(textField, getStampMatrix(textStamp));						
+					}
+					if(designCanvas.getChildAt(i) is ImageStamp) {
+						var imageStamp:ImageStamp = ImageStamp(designCanvas.getChildAt(i));
+						bitmapData.draw(imageStamp.getBitmap(), getStampMatrix(imageStamp));
+					}
+				}
+				/*
+				var pngImage:ByteArray = new PNGEncoder().encode(bitmapData);  
+				var encoder:Base64Encoder = new Base64Encoder();
+				encoder.encodeBytes(pngImage);
+				return encoder.toString();
+				*/
+				var pngImage:ByteArray = encodeBitmapAsPNGImage(bitmapData);
+				return encodePNGImageAsBase64String(pngImage);
+			}
+			
+			private function getStampMatrix(stamp:Stamp): Matrix {
+				var fullSizeScale:Number = FULL_SIZE_DESIGN_WIDTH / ON_SCREEN_DESIGN_WIDTH;
+				var matrix:Matrix = new Matrix();
+				matrix.rotate(stamp.stampRotation * Math.PI / 180);
+				matrix.scale(stamp.stampScale * fullSizeScale, stamp.stampScale * fullSizeScale);
+				matrix.tx = stamp.stampX * fullSizeScale;
+				matrix.ty = stamp.stampY * fullSizeScale;
+				return matrix;
+			}
+			
+			private function encodeBitmapAsPNGImage(bitmapData:BitmapData): ByteArray {
+				return new PNGEncoder().encode(bitmapData);  
+			}
+			
+			private function encodePNGImageAsBase64String(pngImage:ByteArray): String {
+				var encoder:Base64Encoder = new Base64Encoder();
+				encoder.encodeBytes(pngImage);
+				return convertBase64EncoderToString(encoder);
+			}
+			
+			private function convertBase64EncoderToString(encoder:Base64Encoder): String {
+				return encoder.toString();
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Style source="styles.css"/>
+	<mx:states>
+		<mx:State name="stampSelected" enterState="onStampSelectedEnterState()">
+			<mx:AddChild relativeTo="{designCanvas}" position="lastChild">
+				<mx:Canvas x="10" y="10" width="212" height="300" borderStyle="solid" borderColor="#333333" id="borderCanvas">
+				</mx:Canvas>
+			</mx:AddChild>
+		</mx:State>	
+		<mx:State name="editingTextStamp" basedOn="stampSelected">
+			<mx:AddChild relativeTo="{toolbar}" position="lastChild">
+				<mx:HBox width="100%" id="textToolbar">
+					<mx:Label text="Texto:"/>
+					<mx:TextInput id="textInput"/>
+					<mx:Label text="Color:"/>
+					<mx:ColorPicker id="colorPicker"/>
+					<mx:Label text="Fuente:"/>
+					<mx:ComboBox id="fontComboBox" dataProvider="{fonts}" width="100%">
+						<mx:itemRenderer>
+							<mx:Component>
+								<mx:Label fontFamily="{data}" toolTip="{data}" fontSize="18" enterFrame="label_enterFrameHandler(event)">
+									<mx:Script>
+										<![CDATA[
+											protected function label_enterFrameHandler(event:Event):void {
+												if(data.indexOf("Bold") != -1) {
+													event.target.setStyle("fontWeight", "bold");
+												}
+											}
+										]]>
+									</mx:Script>
+								</mx:Label>
+								
+							</mx:Component>
+						</mx:itemRenderer>
+					</mx:ComboBox>
+				</mx:HBox>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>	
+	<mx:VBox width="100%" styleName="toolbar" id="toolbar" x="0" y="0" verticalGap="10">
+		<mx:HBox width="100%" verticalAlign="middle" id="hbox1" horizontalAlign="center" horizontalGap="10">
+			<mx:Button height="100%" label="Agregar Imagen" id="addImageStamp" click="onAddImageStamp()" icon="@Embed(source='../images/insert-image.png')" width="100%"/>
+			<mx:Button height="100%" label="Agregar Texto" id="addTextStamp" click="onAddTextStamp()" icon="@Embed(source='../images/insert-text.png')" width="100%"/>
+		</mx:HBox>
+	</mx:VBox>
+	<mx:Canvas id="canvas" x="25" y="100" width="500" height="500" borderColor="#0096FF"
+			   borderStyle="none">
+		<mx:Image width="461" height="454" scaleContent="false" y="10" x="19" id="tShirtImage" click="onTShirtClick(event)"/>
+		<mx:Canvas id="designCanvas" x="134" y="90" width="232" height="320" borderColor="#0096FF"
+				   borderStyle="none">
+		</mx:Canvas>
+	</mx:Canvas>
+</mx:Application>

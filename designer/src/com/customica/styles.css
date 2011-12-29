@@ -1,0 +1,13 @@
+.toolbar {
+	padding-top: 5px;
+	padding-right: 5px;
+	padding-bottom: 5px;
+	padding-left: 5px;
+	border-style: solid;
+	border-color: #DDDDDD;
+	border-thickness: 1px;
+	background-color: #FAFAFA;
+}
+.textStamp {
+	text-align: center;
+}

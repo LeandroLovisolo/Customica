@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:ComboBox xmlns:mx="http://www.adobe.com/2006/mxml" open="onOpen()" close="onClose()">
+
+	<mx:Script>
+		<![CDATA[
+			import flash.display.DisplayObject;
+			
+			import mx.controls.ComboBox;
+			import mx.core.IFlexDisplayObject;
+			import mx.core.UIComponent;
+			import mx.events.DropdownEvent;
+			
+			private var isOpen:Boolean;
+			private var iconHolder:UIComponent;
+			
+			private function onOpen(): void {
+				isOpen = true;
+			}
+			
+			private function onClose(): void {
+				isOpen = false;
+			}
+			
+			override protected function createChildren():void {
+				super.createChildren();
+				iconHolder = new UIComponent();
+				iconHolder.addEventListener(MouseEvent.CLICK, onIconHolderClick);
+				addChild(iconHolder);
+			}
+			
+			private function onIconHolderClick(event:MouseEvent): void {
+				if(isOpen) close();
+				else open();
+			}
+			
+			override protected function measure():void {
+				super.measure();
+				if (iterator) {
+					var icon:IFlexDisplayObject = new iterator.current.icon() as IFlexDisplayObject;
+					while (iconHolder.numChildren > 0)
+						iconHolder.removeChildAt(0);
+					iconHolder.addChild(DisplayObject(icon));
+					measuredWidth += icon.measuredWidth;
+					measuredHeight = Math.max(measuredHeight, icon.measuredHeight + borderMetrics.top + borderMetrics.bottom) + 6;
+					
+				}
+			}
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				var iconClass:Class = selectedItem.icon;
+				var icon:IFlexDisplayObject = new iconClass() as IFlexDisplayObject;
+				while (iconHolder.numChildren > 0) {
+					iconHolder.removeChildAt(0);
+				}
+				iconHolder.addChild(DisplayObject(icon));
+				iconHolder.y = (unscaledHeight - icon.measuredHeight) / 2;
+				iconHolder.x = borderMetrics.left + 8;
+				textInput.x = iconHolder.x + icon.measuredWidth;
+				textInput.setActualSize(textInput.width - icon.measuredWidth, textInput.height);
+			} 
+		]]>
+	</mx:Script>
+	
+	<mx:itemRenderer>
+		<mx:Component>
+			<mx:HBox styleName="plain" horizontalScrollPolicy="off" verticalAlign="middle">
+				<mx:Image source="{data.icon}" />
+				<mx:Label text="{data.name}" fontWeight="bold"/>
+			</mx:HBox>
+		</mx:Component>
+	</mx:itemRenderer>
+	
+</mx:ComboBox>
