@@ -42,6 +42,37 @@ div.modal {
 }
 
 /* main.html */
+div.readonly-banner {
+	padding: 15px 0;
+	background-color: orange;
+	border-bottom: 2px dotted #222;
+	h2 {
+		margin: 0px;
+		font-size: 40px;
+		line-height: 40px;
+	}
+	h3 {
+		margin: 0px;
+		font-size: 16px;
+		line-height: 32px;
+		font-family: Arial, Helvetica, sans-serif;
+		font-weight: bold;
+	}
+	p {
+		margin: 0;
+		line-height: 18px;
+		font-size: 13px;
+		color: #333;
+		strong { color: #181818; }
+		a { color: blue !important; }
+		&.signature { text-align: right; }
+	}
+	hr {
+		margin: 15px 0;
+		border-width: 0;
+		border-top: 1px dashed #222;
+	}
+}
 div.header {
 	background-color: #222; height: 32px; padding: 5px 0;
 	color: #aaa;
@@ -167,4 +198,14 @@ div.order-page {
 div.designer-page {
 	a.save { .buttonLink(#008500, #00CC00); }
 	small.requiresFacebook { text-align: center; color: gray; }
+	div.readonly {
+		border: 1px solid orange;
+		background-color: lightyellow;
+		padding: 5px 10px;
+		p {
+			margin: 5px 0;
+			font-size: 13px;
+			line-height: 18px; 
+		}
+	}
 }

@@ -10,16 +10,21 @@ import models.TShirt.Gender;
 import models.TShirt.Size;
 import models.dineromail.DineroMailHttpPost;
 import models.dineromail.DineroMailHttpPostFactory;
+import play.Play;
 import play.data.validation.Valid;
+import play.mvc.Before;
 import play.mvc.Controller;
-import play.mvc.Http;
-import play.mvc.Http.Request;
 import play.mvc.Router;
 import play.templates.JavaExtensions;
 
 public class Application extends Controller {
 
 	private static final String LOGO_URL = "http://customica.com/images/logo.png";
+	
+	@Before
+	static void addReadOnlyFlag() {
+		renderArgs.put("readonly", isReadOnly());
+	}
 	
     public static void index() {
     	renderArgs.put("newestTShirts", TShirt.findLatest6());
@@ -53,10 +58,12 @@ public class Application extends Controller {
     }
     
     public static void buyButton(Long id, Gender gender, Size size) {
+    	failIfReadOnly();
     	order(id, genderToUrlParam(gender), sizeToUrlParam(size));
     }
     
     public static void order(Long id, String gender, String size) {
+    	failIfReadOnly();
     	TShirt tShirt = TShirt.findById(id);
     	Gender genderValue = genderFromUrlParam(gender);
     	Size sizeValue = sizeFromUrlParam(size);
@@ -68,6 +75,7 @@ public class Application extends Controller {
     }
     
     public static void submitOrder(Long id, Gender gender, Size size, @Valid Order order) {
+    	failIfReadOnly();
     	TShirt tShirt = TShirt.findById(id);
     	if(tShirt == null) Application.index();
     	
@@ -119,6 +127,8 @@ public class Application extends Controller {
     }
     
     public static void submitDesign(Long id, String xml, String title, Long categoryId, boolean shareOnFacebook) {
+    	failIfReadOnly();
+
     	if(xml == null || title == null || categoryId == null) error("Invalid input.");
     	
     	TShirt tShirt = null;
@@ -134,6 +144,8 @@ public class Application extends Controller {
     }
     
     public static void deleteTShirt(Long id) {
+    	failIfReadOnly();
+    	
     	TShirt tShirt = TShirt.findById(id);
     	if(tShirt != null && tShirt.isAuthorLoggedIn()) tShirt.delete();
     	Application.index();
@@ -155,6 +167,14 @@ public class Application extends Controller {
 	private static Size sizeFromUrlParam(String size) {
 		if(size == null) return null;
 		return Size.fromString(size.toUpperCase());
+	}
+	
+	private static boolean isReadOnly() {
+		return "true".equals(Play.configuration.getProperty("readonly").trim().toLowerCase());
+	}
+	
+	private static void failIfReadOnly() {
+		if(isReadOnly()) throw new RuntimeException("Action not available in read-only mode.");
 	}
 	
 }

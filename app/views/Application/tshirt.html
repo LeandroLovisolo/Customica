@@ -44,9 +44,15 @@
 		#{if tShirt.isAuthorLoggedIn()}
 		<p class="authorLinks">
 			Esta remera la diseñaste vos.
-			La podés
-			<a href="@{Application.designer(tShirt.id)}">editar</a> o
-			<a href="@{Application.deleteTShirt(tShirt.id)}" class="delete">eliminar</a>.
+			#{if readonly}
+				Editala haciendo click <a href="@{Application.designer(tShirt.id)}">acá</a>.
+			#{/if} 
+			#{else}
+				La podés
+				<a href="@{Application.designer(tShirt.id)}">editar</a>
+				o <a href="@{Application.deleteTShirt(tShirt.id)}" class="delete">eliminar</a>.
+			#{/else}			
+			
 			
 		</p>
 		#{/if}
@@ -70,7 +76,7 @@
 			<div class="clearfix"></div>
 		</div>
 
-		<div>		
+		 <div #{if readonly} style="display: none" #{/if} >		
 			<h3 class="three columns row alpha center">$${models.TShirt.PRICE}</h3>
 			<div class="five columns row omega">
 				<div class="chooseSize">ELEGÍ UN TALLE</div>
@@ -90,7 +96,7 @@
 			<div class="clearfix"></div>
 		</div>
 		
-		<h4 class="half-bottom">Compartila con tus amigos</h4>
+		<h4 class="half-bottom" style="margin-top: 20px">Compartila con tus amigos</h4>
 		<fb:like href="@@{Application.tshirt(tShirt.id, tShirt.title.slugify())}" send="false" width="460" show_faces="true" action="like" font=""></fb:like>
 		<div class="row"></div>
 		

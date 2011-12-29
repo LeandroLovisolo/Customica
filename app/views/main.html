@@ -70,33 +70,72 @@
 		mpmetrics.track("pageview");
 	</script>	
 </head>
-<body>
+<body>	
 
-<div id="fb-root"></div>
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '109218475776229', // App ID
-      status     : true, // check login status
-      cookie     : true, // enable cookies to allow the server to access the session
-      xfbml      : true,  // parse XFBML
-      channelUrl : '//local.customica.com:9000/public/channel.html',
-      oauth      : true
-    });
+	<div id="fb-root"></div>
+	<script>
+	  window.fbAsyncInit = function() {
+	    FB.init({
+	      appId      : '109218475776229', // App ID
+	      status     : true, // check login status
+	      cookie     : true, // enable cookies to allow the server to access the session
+	      xfbml      : true,  // parse XFBML
+	      oauth      : true
+	    });
+	
+	    // Additional initialization code here
+	    $(LoginControls.initialize);
+	  };
+	
+	  // Load the SDK Asynchronously
+	  (function(d){
+	     var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+	     js = d.createElement('script'); js.id = id; js.async = true;
+	     js.src = "//connect.facebook.net/en_US/all.js";
+	     d.getElementsByTagName('head')[0].appendChild(js);
+	   }(document));
+	</script>
 
-    // Additional initialization code here
-    $(LoginControls.initialize);
-  };
 
-  // Load the SDK Asynchronously
-  (function(d){
-     var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
-     js = d.createElement('script'); js.id = id; js.async = true;
-     js.src = "//connect.facebook.net/en_US/all.js";
-     d.getElementsByTagName('head')[0].appendChild(js);
-   }(document));
-</script>
-
+	#{if readonly}
+		<div class="readonly-banner">
+			<div class="container">
+				<div class="row remove-bottom">
+					<div class="four columns">
+						<h2>Watch out!</h2>
+					</div>
+					<div class="twelve columns">
+						<h3>Custómica is running in read-only mode.</h3>
+						<p>Development of this website has stopped. It will continue to run indefinitely in read-only mode.</p>
+						<p>
+							The code behind this website has been <strong>open sourced</strong>.
+							You can get it <a href="https://github.com/LeandroLovisolo/customica">here</a>.
+						</p>
+						<p>Click <a href="http://leandro.me">here</a> to read more about Custómica's shutdown.</p>
+						<p>Thanks to all the Custómica friends for your continued support!</p>
+						<p class="signature">&#8212; <a href="http://leandro.me">Leandro Lovisolo</a> (founder)</p>
+					</div>
+				</div>
+				<hr/>
+				<div class="row remove-bottom">
+					<div class="four columns">
+						<h2>¡Atención!</h2>
+					</div>
+					<div class="twelve columns">
+						<h3>Custómica está funcionando en modo sólo lectura.</h3>
+						<p>El desarrollo de este sitio se ha suspendido, y va a continuar funcionando de forma indefinida en modo sólo lectura.</p>
+						<p>
+							El código detrás de este sitio ha sido liberado.
+							Lo podés obtener <a href="https://github.com/LeandroLovisolo/customica">acá</a>.
+						</p>
+						<p>Hacé click <a href="http://leandro.me">acá</a> para leer más sobre el cierre de Custómica.</p>
+						<p>¡Gracias a todos los amigos de Custómica por el apoyo a lo largo de este proyecto!</p>
+						<p class="signature">&#8212; <a href="http://leandro.me">Leandro Lovisolo</a> (fundador)</p>						
+					</div>
+				</div>
+			</div>
+		</div>
+	#{/if}
 
 
 	<div class="header">

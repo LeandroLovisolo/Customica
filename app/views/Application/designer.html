@@ -53,36 +53,46 @@
 		<div id="Designer"></div>
 	</div>
 	<div class="five columns omega">
-		#{form @Application.submitDesign() }
-			<input type="hidden" name="id" value="${tShirt?.id}"/>
-			<input type="hidden" name="xml" id="xml" value=""/>
-		
-			<div class="errorbox row" style="display: none">Tenés que darle un nombre a la remera.</div>
+		#{if readonly}
+			<div class="readonly">
+				<p><strong>Custómica está en modo sólo lectura.</strong></p>
+				<p>Eso significa que podés probar el diseñador pero no vas a poder guardar tu remera.</p>
+			</div>
+		#{/if}
+		#{else}
+	
+			#{form @Application.submitDesign() }
+				<input type="hidden" name="id" value="${tShirt?.id}"/>
+				<input type="hidden" name="xml" id="xml" value=""/>
 			
-			<label for="title">Nombre de tu remera:</label>
-			<input type="text" name="title" id="title" value="${tShirt?.title}" style="width: 270px"/>
+				<div class="errorbox row" style="display: none">Tenés que darle un nombre a la remera.</div>
+				
+				<label for="title">Nombre de tu remera:</label>
+				<input type="text" name="title" id="title" value="${tShirt?.title}" style="width: 270px"/>
+				
+				<label for="category">Categoría:</label>
+				<select name="categoryId" style="width: 100%">
+					#{list items:categories, as:'category'}
+						%{ if(tShirt == null) selected = category.isDefault; else selected = tShirt.category.id == category.id }%
+						<option value="${category.id}" ${selected ? 'selected="selected"' : ''}>
+							${category.name}
+						</option>
+					#{/list}
+				</select>
+				<label for="shareOnFacebook">
+					<input type="checkbox" name="shareOnFacebook" id="shareOnFacebook" checked="checked"/>
+					<span>Quiero compartir esta remera en Facebook.</span>
+				</label>
+				
+				<div class="row"></div>
+				
+				<a href="#" onclick="$('form').submit(); return false" class="save">
+					Guardar
+				</a>
+				
+				<small class="requiresFacebook five columns alpha omega">Require que te conectes con tu cuenta de Facebook.</small>
+			#{/form}
 			
-			<label for="category">Categoría:</label>
-			<select name="categoryId" style="width: 100%">
-				#{list items:categories, as:'category'}
-					%{ if(tShirt == null) selected = category.isDefault; else selected = tShirt.category.id == category.id }%
-					<option value="${category.id}" ${selected ? 'selected="selected"' : ''}>
-						${category.name}
-					</option>
-				#{/list}
-			</select>
-			<label for="shareOnFacebook">
-				<input type="checkbox" name="shareOnFacebook" id="shareOnFacebook" checked="checked"/>
-				<span>Quiero compartir esta remera en Facebook.</span>
-			</label>
-			
-			<div class="row"></div>
-			
-			<a href="#" onclick="$('form').submit(); return false" class="save">
-				Guardar
-			</a>
-			
-			<small class="requiresFacebook five columns alpha omega">Require que te conectes con tu cuenta de Facebook.</small>
-		#{/form}
+		#{/else}
 	</div>
 </div>
