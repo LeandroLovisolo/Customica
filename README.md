@@ -34,8 +34,9 @@ You can start the app by cd-ing into the app directory and executing `play run` 
 You can easily do this in one line:
 
 ```
-play run -DDATABASE_URL=postgres://<user>:<pass>@<host>:<port>/<db> -DFACEBOOK_ID=<your app ID>
--DFACEBOOK_SECRET=<your app secret> -DREAD_ONLY=<true or false> -DADMIN_USER=<dashboard username> -DADMIN_PASS=<dashboad password>
+play run -DDATABASE_URL=postgres://<user>:<pass>@<host>:<port>/<db> -DFACEBOOK_ID=<your app ID> \
+-DFACEBOOK_SECRET=<your app secret> -DREAD_ONLY=<true or false> \
+-DADMIN_USER=<dashboard username> -DADMIN_PASS=<dashboad password>
 ```
 
 The app will be available at http://localhost:9000/ after running the command above.
@@ -46,20 +47,20 @@ Note that you need to run the app from the same domain that you've specified whe
 
 ## Administrative dashboard ##
 
-You can log into the administrative dashboard by going to <your app url>/admin and entering the username/password combo that you've specified in the ADMIN_USER and ADMIN_PASS environment variables.
+You can log into the administrative dashboard by going to `<your app url>/admin` and entering the username/password combo that you've specified in the `ADMIN_USER` and `ADMIN_PASS` environment variables.
 
 From the administrative dashboard you can create tshirt categories, edit/remove tshirts created by the users and review your orders.
 
 ### Default tshirt category ###
 
-If you're starting with an empty database, go to <your app url>/admin/crud/categories/new and create a new default category for your tshirts. Don't forget to check the "isDefault" option.
+If you're starting with an empty database, go to `<your app url>/admin/crud/categories/new` and create a new default category for your tshirts. Don't forget to check the "isDefault" option.
 
 ## Read-only mode ##
 
 Every time a user creates a new design, the application generates a couple of PNG images that are stored in the app's public/designs directory and used to display the new tshirt design across the website.
 
-Custómica used to run from a paid VPS before going belly up, but now I've moved it to Heroku where it's running on a free Dyno (Cedar stack).
+Custómica used to run from a paid VPS before going belly up, but now I've moved it to Heroku where it's running on a free dyno (Cedar stack).
 
-Given the way Heroku works, it's not possible to persist data in the filesystem, so instead of rewriting the code responsible of rendering and storing the tshirt images, I decided to just code a configuration switch to run the app in read-only mode and check some of the existing designs into the Git repository (images in public/designs were originally ignored by Git.)
+Given the way Heroku works, it's not possible to persist data in the filesystem, so instead of rewriting the code responsible of rendering and storing the tshirt images, I decided to just code a configuration switch to run the app in read-only mode and check some of the existing designs into the Git repository (images in `public/designs` were originally ignored by Git.)
 
-So, if you want to run Custómica on Heroku, remember to set the READ_ONLY environment variable to true.
+So, if you want to run Custómica on Heroku, remember to set the `READ_ONLY` environment variable to true.
