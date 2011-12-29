@@ -21,6 +21,10 @@ I started developing Custómica using a different stack (for the curious, it was
 
 Custómica is no longer being actively developed. The last code changes were the modifications needed to make the app run on Heroku, specifically a quick and dirty read-only config switch to prevent the app from writing to the filesystem.
 
+### License ###
+
+MIT licensed.
+
 ## Requirements ##
 
 ### Play framework ###
@@ -46,7 +50,7 @@ You can start the app by cd-ing into the app directory and executing `play run` 
 * `ADMIN_PASS`: Password for the administrative dashboard.
 * `READ_ONLY`: Whether the app is running in read-only mode or not. Possible values: true, false.
 
-You can easily do this in one line:
+You can easily do this as a single command:
 
 ```
 play run -DDATABASE_URL=postgres://<user>:<pass>@<host>:<port>/<db> -DFACEBOOK_ID=<your app ID> \
@@ -56,7 +60,7 @@ play run -DDATABASE_URL=postgres://<user>:<pass>@<host>:<port>/<db> -DFACEBOOK_I
 
 The app will be available at http://localhost:9000/ after running the command above.
 
-If you're starting with an empty database, then the first thing you should do is create a default tshirt category from the administrative dashboard as explained below. If you omit this step, your users won't be able to save their custom-designed tshirts.
+If you're starting with an empty database, the first thing you should do is create a default tshirt category from the administrative dashboard as explained below. If you omit this step, your users won't be able to save their custom-designed tshirts.
 
 Note that you need to run the app from the same domain that you've specified when you registered your Facebook application, otherwise the login system won't work. You can edit your /etc/hosts file as explained [here](http://leandro.me/posts/facebook-apps-and-etc-hosts/).
 
@@ -79,3 +83,13 @@ Custómica used to run from a paid VPS before going belly up, but now I've moved
 Given the way Heroku works, it's not possible to persist data in the filesystem, so instead of rewriting the code responsible of rendering and storing the tshirt images, I decided to just code a configuration switch to run the app in read-only mode and check some of the existing designs into the Git repository (images in `public/designs` were originally ignored by Git.)
 
 If you want to run Custómica on Heroku, remember to set the `READ_ONLY` environment variable to true.
+
+## Final words ##
+
+I'd like to thank all my friends who encouraged me to pursue this project. It was a terrific learning experience and I'm a much better developer and aspiring entrepreneur because of it.
+
+If you'd like to get in touch with me, I'm [@LeandroLovisolo](http://twitter.com/LeandroLovisolo) on Twitter.
+
+Thanks!
+
+-- Leandro
