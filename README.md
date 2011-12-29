@@ -1,6 +1,6 @@
 # Custómica #
 
-This is the source code for [Custómica](http://customica.com), my defunct startup.
+This is the source code for Custómica, my defunct startup ([customica.com](http://customica.com)).
 
 Custómica was an online t-shirt store for the Argentinian market where anyone could design their own t-shirt right from their browser.
 
@@ -10,7 +10,7 @@ It failed to gain any significant traction, so I'm releasing its source code. Th
 
 ### Play framework ###
 
-Custómica is a [Play](http://www.playframework.org/) application written in Java. You need to [download](http://www.playframework.org/download) Play version *1.2.4* in order to run the app.
+Custómica is a [Play](http://www.playframework.org/) application written in Java. You need to [download](http://www.playframework.org/download) Play version **1.2.4** in order to run the app.
 
 ### A PostgreSQL database ###
 
@@ -63,4 +63,4 @@ Custómica used to run from a paid VPS before going belly up, but now I've moved
 
 Given the way Heroku works, it's not possible to persist data in the filesystem, so instead of rewriting the code responsible of rendering and storing the tshirt images, I decided to just code a configuration switch to run the app in read-only mode and check some of the existing designs into the Git repository (images in `public/designs` were originally ignored by Git.)
 
-So, if you want to run Custómica on Heroku, remember to set the `READ_ONLY` environment variable to true.
+If you want to run Custómica on Heroku, remember to set the `READ_ONLY` environment variable to true.
