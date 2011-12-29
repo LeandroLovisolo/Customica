@@ -98,43 +98,68 @@
 
 
 	#{if readonly}
-		<div class="readonly-banner">
+		<script type="text/javascript">
+			$(function() {
+				var currentLang = "en";
+				$("div.readonly-banner .es").hide();
+				$("div.readonly-banner a.language").click(function() {
+					$("div.readonly-banner ." + currentLang).hide();
+					currentLang = (currentLang == "en" ? "es" : "en");
+					$("div.readonly-banner ." + currentLang).show();
+				});
+				$("div.readonly-banner").show();
+			});
+		</script>
+		
+		<div class="readonly-banner" style="display: none">
 			<div class="container">
-				<div class="row remove-bottom">
-					<div class="four columns">
-						<h2>Watch out!</h2>
+				<div class="four columns">
+					<h2>
+						<span class="en">Watch out!</span>
+						<span class="es">¡Atención!</span>
+					</h2>
+				</div>
+				<div class="twelve columns">
+					<div class="row remove-bottom">
+						<h3 class="ten columns alpha">
+							<span class="en">Custómica is running in read-only mode.</span>
+							<span class="es">Custómica está funcionando en modo sólo lectura.</span>
+						</h3>
+						<a href="javascript:void(null)" class="language two columns omega" style="text-align: right">
+							<span class="en">Español</span>
+							<span class="es">English</span>
+						</a>
 					</div>
-					<div class="twelve columns">
-						<h3>Custómica is running in read-only mode.</h3>
-						<p>Development of this website has stopped. It will continue to run indefinitely in read-only mode.</p>
-						<p>
+					<p>
+						<span class="en">Development of this website has stopped. It will continue to run indefinitely in read-only mode.</span>
+						<span class="es">El desarrollo de este sitio se ha suspendido, y va a continuar funcionando de forma indefinida en modo sólo lectura.</span>
+					</p>
+					<p>
+						<span class="en">
 							The code behind this website has been <strong>open sourced</strong>.
 							You can get it <a href="https://github.com/LeandroLovisolo/customica">here</a>.
-						</p>
-						<p>Click <a href="http://leandro.me">here</a> to read more about Custómica's shutdown.</p>
-						<p>Thanks to all the Custómica friends for your continued support!</p>
-						<p class="signature">&#8212; <a href="http://leandro.me">Leandro Lovisolo</a> (founder)</p>
-					</div>
-				</div>
-				<hr/>
-				<div class="row remove-bottom">
-					<div class="four columns">
-						<h2>¡Atención!</h2>
-					</div>
-					<div class="twelve columns">
-						<h3>Custómica está funcionando en modo sólo lectura.</h3>
-						<p>El desarrollo de este sitio se ha suspendido, y va a continuar funcionando de forma indefinida en modo sólo lectura.</p>
-						<p>
+						</span>
+						<span class="es">
 							El código detrás de este sitio ha sido liberado.
-							Lo podés obtener <a href="https://github.com/LeandroLovisolo/customica">acá</a>.
-						</p>
-						<p>Hacé click <a href="http://leandro.me">acá</a> para leer más sobre el cierre de Custómica.</p>
-						<p>¡Gracias a todos los amigos de Custómica por el apoyo a lo largo de este proyecto!</p>
-						<p class="signature">&#8212; <a href="http://leandro.me">Leandro Lovisolo</a> (fundador)</p>						
-					</div>
-				</div>
-			</div>
-		</div>
+							Lo podés obtener <a href="https://github.com/LeandroLovisolo/customica">acá</a>.								
+						</span>
+					</p>
+					<p>
+						<span class="en">Click <a href="http://leandro.me">here</a> to read more about Custómica's shutdown.</span>
+						<span class="es">Hacé click <a href="http://leandro.me">acá</a> para leer más sobre el cierre de Custómica.</span>
+					</p>
+					<p>
+						<span class="en">Thanks to all Custómica's friends for your continued support!</span>
+						<span class="es">¡Gracias a todos los amigos de Custómica por el apoyo a lo largo de este proyecto!</span>
+					</p>
+					<p class="signature">
+						<span class="en">&#8212; <a href="http://leandro.me">Leandro Lovisolo</a> (founder)</span>
+						<span class="es">&#8212; <a href="http://leandro.me">Leandro Lovisolo</a> (fundador)</span>
+						
+					</p>
+				</div>				
+			</div> <!-- container -->
+		</div> <!-- readonly-banner -->
 	#{/if}
 
 
