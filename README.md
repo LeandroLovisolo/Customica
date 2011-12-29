@@ -91,5 +91,4 @@ I'd like to thank all my friends who encouraged me to pursue this project. It wa
 If you'd like to get in touch with me, I'm [@LeandroLovisolo](http://twitter.com/LeandroLovisolo) on Twitter.
 
 Thanks!
-
 -- Leandro
