@@ -2,9 +2,9 @@
 
 This is the source code for Custómica, my defunct startup ([customica.com](http://customica.com)).
 
-Custómica was an online t-shirt store for the Argentinian market where anyone could design their own t-shirt right from their browser.
+Custómica was an online t-shirt store for the Argentinian market where anyone could design their own t-shirt right from their browser. You can read the post-mortem [here](http://leandro.me/posts/i-am-open-sourcing-my-defunct-startup-customica/).
 
-It failed to gain any significant traction, so I'm releasing its source code. The application is still running in read-only mode on a free Heroku dyno. You can check it out [here](http://customica.com).
+It failed to gain any significant traction, so I'm releasing its source code. The application is [still running](http://customica.com) in read-only mode on a free Heroku dyno.
 
 Custómica was written entirely by myself, from the database persistence code up to the user interface.
 
